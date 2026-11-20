@@ -16,7 +16,7 @@ export function OwedPill({ courier }: { courier: CourierPosition }) {
     return <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-500/25 dark:text-emerald-300">{t('balances.settled')}</span>;
   }
   return (
-    <span data-testid="owed-pill" className={clsx('rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset',
+    <span data-testid="owed-pill" className={clsx('inline-block rounded-2xl px-2 text-right leading-snug py-0.5 text-[11px] font-medium ring-1 ring-inset',
       sign > 0 ? 'bg-rose-500/10 text-rose-700 ring-rose-500/25 dark:text-rose-300' : 'bg-amber-500/10 text-amber-700 ring-amber-500/25 dark:text-amber-300')}>
       {sign > 0
         ? t('balances.owes', { name: courier.name, amount: formatMoney(courier.balanceOwed, lang) })
@@ -39,7 +39,7 @@ export function CourierBalanceTable({ couriers }: { couriers: CourierPosition[] 
             <th className="th text-right">{t('balances.reported')}</th>
             <th className="th text-right">{t('balances.fees')}</th>
             <th className="th text-right">{t('balances.net')}</th>
-            <th className="th text-right">{t('balances.owed')}</th>
+            <th className="th pr-4 text-right">{t('balances.owed')}</th>
           </tr>
         </thead>
         <tbody>
@@ -66,8 +66,8 @@ export function CourierBalanceTable({ couriers }: { couriers: CourierPosition[] 
                 <td className="td num"><Money value={c.reportedCollections} unit={false} /></td>
                 <td className="td num"><Money value={c.fees} unit={false} muted /></td>
                 <td className="td num"><Money value={c.netRemitted} unit={false} /></td>
-                <td className="td text-right">
-                  <div className="flex flex-col items-end gap-1">
+                <td className="td whitespace-normal pr-4 text-right">
+                  <div className="ml-auto flex max-w-[290px] flex-col items-end gap-1">
                     <Money value={c.balanceOwed} className="font-semibold" />
                     <OwedPill courier={c} />
                   </div>
