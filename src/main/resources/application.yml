@@ -20,6 +20,14 @@ spring:
           batch_size: 50
         order_inserts: true
         order_updates: true
+  mvc:
+    format:
+      date: iso
+      date-time: iso
+  servlet:
+    multipart:
+      max-file-size: ${UPLOAD_MAX_FILE_SIZE:5MB}
+      max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:6MB}
   data:
     web:
       pageable:
