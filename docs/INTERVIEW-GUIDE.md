@@ -14,6 +14,7 @@ Contents
 7. [Testing pyramid](#7-testing-pyramid)
 8. [25 likely interview questions about this codebase](#8-25-likely-interview-questions-about-this-codebase)
 9. [Two-minute pitch](#9-two-minute-pitch)
+10. [How the web UI talks to the API](#10-how-the-web-ui-talks-to-the-api)
 
 ---
 
@@ -445,3 +446,66 @@ revocation; add metrics/tracing (Micrometer, OpenTelemetry) and structured logs.
 > filter chain and method security, and tenant isolation in the repository layer. Errors are RFC 7807
 > ProblemDetail. It has 197 tests (Mockito, `@WebMvcTest`, `@DataJpaTest`, Testcontainers),
 > a JaCoCo gate, a multi-stage Docker image and GitHub Actions CI.
+
+---
+
+## 10. How the web UI talks to the API
+
+The React app in `web/` is a plain client of the REST API: no backend-for-frontend, one extra
+read endpoint (`GET /api/overview`). nginx serves the bundle and proxies `/api`, so the browser
+sees a single origin and the API needs no CORS configuration.
+
+```mermaid
+sequenceDiagram
+    participant UI as React (TanStack Query)
+    participant N as nginx :3200
+    participant A as Spring Boot
+    UI->>N: POST /api/statements (multipart)
+    N->>A: proxy
+    A-->>UI: 202 Accepted {statement: UPLOADED}
+    loop every 1 s while UPLOADED / PROCESSING
+        UI->>A: GET /api/statements/{id}
+    end
+    A-->>UI: RECONCILED
+    UI->>A: GET /api/statements/{id}/reconciliation
+    Note over UI: invalidate overview + history once
+```
+
+**JWT refresh** (`web/src/lib/api.ts`). Login returns a 15-minute access token and a 7-day refresh
+token. The UI decodes the access token's claims (`sub`, `role`, `mid`, `exp`) only to render the
+right screens; the API re-checks everything. Every request goes through one `authorizedFetch`:
+
+- if the token expires in under 30 s, it refreshes **before** sending;
+- on a 401 it calls `POST /api/auth/refresh` and retries once with the new token;
+- refresh is **single-flight**: five queries failing together share one refresh promise;
+- if the refresh token is rejected too, the session is cleared and the user is sent to login.
+
+Tokens live in `sessionStorage` (tab-scoped, survives a reload). Trade-off: readable by injected
+script, so a production version would move the refresh token to an `HttpOnly` cookie on
+`/api/auth/refresh` and keep the access token in memory only.
+
+**Polling the async processing.** The upload answers `202 Accepted`; reconciliation runs after
+commit on the `@Async` executor. TanStack Query's `refetchInterval` returns 1000 ms while any
+visible statement is `UPLOADED` or `PROCESSING` and `false` otherwise, so polling stops by itself.
+When a statement leaves those states the overview and history queries are invalidated once. An
+SSE or WebSocket push would be the next step at scale; polling a single row is cheap and has no
+connection state to manage.
+
+**BigDecimal as strings.** Money is `numeric(12,2)` in PostgreSQL, `BigDecimal` in Java and a JSON
+**string** (`"530.50"`) on the wire. The UI never calls `parseFloat` on it: `web/src/lib/money.ts`
+converts the string to integer cents in a `BigInt`, then groups digits with the locale's symbols
+from `Intl` (`4,588.00` in English, `4.588,00` in French). Sums, signs, absolute values and percentages are computed
+on cents. The one float in the app is the bar height in the chart, and even there the tooltip
+text comes from the original string. Typed amounts (claimed dispute amount) are validated with a
+regex and sent back as a normalized string (`"50.00"`).
+
+**Errors.** Every non-2xx body is an RFC 7807 ProblemDetail; the client turns it into an
+`ApiError(status, title, detail, fieldErrors)`. Forms show field errors (the CSV upload lists every
+bad row from `errors.file`), a 409 on concurrent dispute resolution shows the "modified by someone
+else" detail, and a 404 renders "Not found, or it belongs to another merchant": tenant isolation
+is visible in the UI the same way it is in the API.
+
+**Roles.** The UI hides staff controls (dispute resolution) and the merchant-only upload for ops,
+but this is presentation only: `@PreAuthorize("hasRole('STAFF')")` and the tenant specifications
+still decide.
+

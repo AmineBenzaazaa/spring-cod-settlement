@@ -11,6 +11,8 @@ courier still owes, and lets merchants open and export **disputes**.
 It is the Java port of [django-cod-settlement](https://github.com/AmineBenzaazaa/django-cod-settlement):
 same domain and rules, written the way a Spring team would write it.
 
+![Settlement Desk overview](docs/img/overview.png)
+
 Stack: Java 21 · Spring Boot 3.5 · Spring Web · Spring Data JPA / Hibernate 6 · PostgreSQL 16 ·
 Flyway · Spring Security (stateless JWT) · Bean Validation · MapStruct · springdoc-openapi ·
 JUnit 5 · Mockito · Testcontainers · JaCoCo · Docker · GitHub Actions.
@@ -34,7 +36,55 @@ JUnit 5 · Mockito · Testcontainers · JaCoCo · Docker · GitHub Actions.
 - **RFC 7807 ProblemDetail** errors everywhere (validation, 401/403 from the security chain, 404,
   409, 422, 500 without leaking internals).
 - **OpenAPI 3** + Swagger UI, Actuator health/readiness probes, `demo` profile with seed data.
-- **197 automated tests**, JaCoCo coverage gate in `mvn verify` (currently 96 % of lines overall, 99 % in the service layer).
+- **Settlement Desk web UI** (React + TypeScript) for merchants and finance ops, see below.
+- **205 backend tests + 40 Vitest + 1 Playwright e2e**, JaCoCo coverage gate in `mvn verify` (currently 96 % of lines overall, 99 % in the service layer).
+
+## Web UI: Settlement Desk
+
+A React web app in [`web/`](web/) for merchants and finance ops, served by nginx at
+**http://localhost:3200** (it proxies `/api` to the Spring Boot app, so the browser sees one origin
+and the API needs no CORS setup).
+
+| Reconciliation of a courier statement | Dispute resolution (finance ops, dark mode) |
+|---|---|
+| ![Reconciliation](docs/img/reconciliation.png) | ![Disputes](docs/img/disputes-dark.png) |
+
+- **Overview**: COD expected vs reported, net remitted, open disputes and the discrepancy amount,
+  plus a per-courier balance table ("Speedex Colis still owes 530.50 MAD") and a chart
+  (one call to `GET /api/overview`).
+- **Statements**: drag-and-drop CSV upload (courier + period), an upload history that polls
+  while processing runs, the SHA-256 duplicate notice, and every rejected row from the 400.
+- **Reconciliation**: lines colour-coded MATCHED / AMOUNT_MISMATCH / UNKNOWN_TRACKING /
+  MISSING_FROM_STATEMENT with expected, collected and signed difference, filters, and a
+  one-click prefilled "Open dispute".
+- **Disputes**: list, detail drawer, staff-only resolution (controls hidden for merchants, 403
+  from the API anyway), CSV export through the existing endpoint.
+- **Orders and couriers**: searchable, paginated tables; orders expand to their delivery attempts.
+- Light/dark and EN/FR, same design tokens as the
+  [parcel-platform](https://github.com/AmineBenzaazaa/spring-parcel-platform) dashboard.
+
+Stack: Vite, React 18, TypeScript (strict), Tailwind, TanStack Query, React Router, Radix Dialog,
+Recharts. Money is formatted from the API's decimal strings with BigInt cents, never floats.
+
+**Demo (2 minutes)**
+
+1. `docker compose up --build -d`, open http://localhost:3200. The login is prefilled with
+   `atlas`; demo chips switch to `medina` or `ops` (password `demo-pass-123`).
+2. As **atlas**, open *Statements*, pick *Speedex Colis*, period 2026-10-01 to 2026-10-31, drop
+   `fixtures/sample_remittance.csv`. The row goes Queued, Processing, Reconciled on its own.
+   Upload it again to see the SHA-256 duplicate notice.
+3. Open the statement: 11 matched lines, one short payment (−50.00), one unknown tracking
+   number (+199.00) and one delivered parcel missing from the file. Click *Open dispute*.
+4. Sign out, sign in as **ops**, open *Disputes*, click the dispute, resolve it. *Export CSV*
+   downloads the list.
+
+```bash
+cd web
+npm ci
+npm run dev          # http://localhost:5174, proxies /api to localhost:18080
+npm test             # Vitest: money, API client and refresh, polling hook, components
+npm run e2e          # Playwright against the compose stack on :3200
+```
 
 ## Architecture
 
@@ -112,16 +162,19 @@ balanceOwed         = expectedCollections − reportedCollections
 
 ## Running it
 
-### Docker (app + PostgreSQL, demo data included)
+### Docker (web UI + app + PostgreSQL, demo data included)
 
 ```bash
 docker compose up --build -d
-curl localhost:8080/actuator/health          # {"status":"UP",...}
-open http://localhost:8080/swagger-ui.html   # click "Authorize", paste an access token
-docker compose down                          # add -v to drop the database volume
+open http://localhost:3200                    # Settlement Desk web UI
+curl localhost:18080/actuator/health          # {"status":"UP",...}
+open http://localhost:18080/swagger-ui.html   # click "Authorize", paste an access token
+docker compose down                           # add -v to drop the database volume
 ```
 
-Ports 8080/5432 busy? `APP_PORT=18080 DB_PORT=15433 docker compose up --build -d`.
+Host ports default to **3200** (web), **18080** (API) and **15433** (PostgreSQL) so the stack runs
+next to other local projects; override with `WEB_PORT`, `APP_PORT` and `DB_PORT`. The app
+container is capped at 512 MB with the heap at 50 % of it (`-XX:MaxRAMPercentage=50`).
 
 Demo users (password `demo-pass-123`): `ops` (STAFF), `atlas` and `medina` (MERCHANT).
 `fixtures/sample_remittance.csv` matches the seeded orders of `atlas` with courier `speedex` (id 1).
@@ -146,10 +199,12 @@ open target/site/jacoco/index.html
 
 | Layer | Tool | Count |
 |---|---|---|
-| Pure rules, services | JUnit 5, Mockito, AssertJ | 136 |
-| Controllers + security | `@WebMvcTest` + real `SecurityFilterChain` + real JWTs | 33 |
+| Pure rules, services | JUnit 5, Mockito, AssertJ | 140 |
+| Controllers + security | `@WebMvcTest` + real `SecurityFilterChain` + real JWTs | 36 |
 | Repositories | `@DataJpaTest` on Testcontainers PostgreSQL | 9 |
-| End to end | `@SpringBootTest` + MockMvc + Testcontainers + Awaitility | 19 |
+| End to end | `@SpringBootTest` + MockMvc + Testcontainers + Awaitility | 20 |
+| Web UI | Vitest + Testing Library (`cd web && npm test`) | 40 |
+| Browser e2e | Playwright through nginx (`cd web && npm run e2e`) | 1 |
 
 Unit and slice tests run with Surefire (`*Test`), Testcontainers tests with Failsafe (`*IT`);
 JaCoCo merges both into one report.
@@ -158,44 +213,47 @@ JaCoCo merges both into one report.
 
 ```bash
 # 1. Log in (access token 15 min, refresh token 7 days)
-TOKEN=$(curl -s -X POST localhost:8080/api/auth/login -H 'Content-Type: application/json' \
+TOKEN=$(curl -s -X POST localhost:18080/api/auth/login -H 'Content-Type: application/json' \
   -d '{"username":"atlas","password":"demo-pass-123"}' | jq -r .accessToken)
 AUTH="Authorization: Bearer $TOKEN"
 
 # 2. Delivered orders over 300 MAD, most expensive first, searching by customer
-curl -s "localhost:8080/api/orders?status=DELIVERED&minAmount=300&q=alaoui&sort=amountDue,desc&size=10" -H "$AUTH"
+curl -s "localhost:18080/api/orders?status=DELIVERED&minAmount=300&q=alaoui&sort=amountDue,desc&size=10" -H "$AUTH"
 
 # 3. Create an order (merchant comes from the token, never from the body)
-curl -s -X POST localhost:8080/api/orders -H "$AUTH" -H 'Content-Type: application/json' \
+curl -s -X POST localhost:18080/api/orders -H "$AUTH" -H 'Content-Type: application/json' \
   -d '{"courierId":1,"trackingNumber":"SPX-900001","customerName":"Sara Tazi","city":"Rabat","amountDue":"349.90"}'
 
 # 4. Record a delivery attempt (moves the order to DELIVERED)
-curl -s -X POST localhost:8080/api/orders/1/attempts -H "$AUTH" \
+curl -s -X POST localhost:18080/api/orders/1/attempts -H "$AUTH" \
   -H 'Content-Type: application/json' -d '{"outcome":"DELIVERED"}'
 
 # 5. Upload a courier remittance CSV -> 202 Accepted, reconciled in the background
-curl -s -X POST localhost:8080/api/statements -H "$AUTH" \
+curl -s -X POST localhost:18080/api/statements -H "$AUTH" \
   -F file=@fixtures/sample_remittance.csv -F courierId=1 \
   -F periodStart=2026-10-01 -F periodEnd=2026-10-31
 #    same file again -> 200 {"duplicate":true,"statement":{"id":1,...}}
 
 # 6. Reconciliation report (optionally ?outcome=AMOUNT_MISMATCH)
-curl -s localhost:8080/api/statements/1/reconciliation -H "$AUTH"
+curl -s localhost:18080/api/statements/1/reconciliation -H "$AUTH"
 # "summary":{"counts":{"MATCHED":11,"AMOUNT_MISMATCH":1,"UNKNOWN_TRACKING":1,"MISSING_FROM_STATEMENT":1},
 #            "expectedTotal":"4588.00","collectedTotal":"4256.50","feesTotal":"250.00",...}
 
 # 7. What does this courier still owe me?
-curl -s localhost:8080/api/couriers/1/balance -H "$AUTH"
+curl -s localhost:18080/api/couriers/1/balance -H "$AUTH"
 # {"courierId":1,"merchantId":1,"currency":"MAD","deliveredOrders":8,"expectedCollections":"4588.00",
 #  "reportedCollections":"4057.50","fees":"225.00","netRemitted":"3832.50","balanceOwed":"530.50"}
 
+# 7b. Everything the dashboard needs in one call: totals, open disputes, discrepancies, per-courier rows
+curl -s localhost:18080/api/overview -H "$AUTH"
+
 # 8. Dispute a discrepancy (claimedAmount defaults to the full difference), then export
-curl -s -X POST localhost:8080/api/disputes -H "$AUTH" -H 'Content-Type: application/json' \
+curl -s -X POST localhost:18080/api/disputes -H "$AUTH" -H 'Content-Type: application/json' \
   -d '{"resultId":3,"reason":"Courier short-paid 50 MAD"}'
-curl -s "localhost:8080/api/disputes/export?status=OPEN" -H "$AUTH" -o disputes.csv
+curl -s "localhost:18080/api/disputes/export?status=OPEN" -H "$AUTH" -o disputes.csv
 
 # 9. Errors are RFC 7807 ProblemDetail
-curl -s "localhost:8080/api/orders?sort=password" -H "$AUTH"
+curl -s "localhost:18080/api/orders?sort=password" -H "$AUTH"
 # {"type":".../problems/invalid-request","title":"Invalid request","status":400,
 #  "detail":"Cannot sort by 'password'. Allowed: amountDue, createdAt, ...","errors":{"sort":[...]}}
 ```
