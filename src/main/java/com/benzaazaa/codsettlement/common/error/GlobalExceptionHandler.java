@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -76,6 +78,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail handleBadSort(PropertyReferenceException ex) {
         return problem(HttpStatus.BAD_REQUEST, "invalid-request", "Invalid request",
                 "Unknown sort property '" + ex.getPropertyName() + "'.");
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    ProblemDetail handleAuthentication(AuthenticationException ex) {
+        return problem(HttpStatus.UNAUTHORIZED, "unauthorized", "Unauthorized", ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    ProblemDetail handleAccessDenied(AccessDeniedException ex) {
+        // Thrown by @PreAuthorize inside the MVC layer; without this handler the catch-all
+        // below would turn it into a 500.
+        return problem(HttpStatus.FORBIDDEN, "forbidden", "Forbidden",
+                "You are not allowed to perform this action.");
     }
 
     @ExceptionHandler(Exception.class)
