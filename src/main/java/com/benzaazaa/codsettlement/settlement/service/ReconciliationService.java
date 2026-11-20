@@ -1,10 +1,12 @@
 package com.benzaazaa.codsettlement.settlement.service;
 
+import com.benzaazaa.codsettlement.common.error.ConflictException;
 import com.benzaazaa.codsettlement.common.error.ResourceNotFoundException;
 import com.benzaazaa.codsettlement.logistics.domain.Order;
 import com.benzaazaa.codsettlement.settlement.domain.ReconciliationResult;
 import com.benzaazaa.codsettlement.settlement.domain.RemittanceLine;
 import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
+import com.benzaazaa.codsettlement.settlement.repository.DisputeRepository;
 import com.benzaazaa.codsettlement.settlement.repository.MoneyTotals;
 import com.benzaazaa.codsettlement.settlement.repository.OutcomeTotals;
 import com.benzaazaa.codsettlement.settlement.repository.ReconciliationResultRepository;
@@ -35,16 +37,18 @@ public class ReconciliationService {
     private final RemittanceLineRepository lines;
     private final ReconciliationResultRepository results;
     private final SettlementOrderRepository orders;
+    private final DisputeRepository disputes;
     private final Clock clock;
     private final ZoneId businessZone;
 
     public ReconciliationService(RemittanceStatementRepository statements, RemittanceLineRepository lines,
                                  ReconciliationResultRepository results, SettlementOrderRepository orders,
-                                 Clock clock, @Value("${app.settlement.zone:Africa/Casablanca}") ZoneId businessZone) {
+                                 DisputeRepository disputes, Clock clock, @Value("${app.settlement.zone:Africa/Casablanca}") ZoneId businessZone) {
         this.statements = statements;
         this.lines = lines;
         this.results = results;
         this.orders = orders;
+        this.disputes = disputes;
         this.clock = clock;
         this.businessZone = businessZone;
     }
@@ -54,6 +58,7 @@ public class ReconciliationService {
         // SELECT ... FOR UPDATE: a second run for the same statement waits here.
         RemittanceStatement statement = statements.findByIdForUpdate(statementId)
                 .orElseThrow(() -> new ResourceNotFoundException("Statement", statementId));
+        ensureNotDisputed(statementId);
         Long merchantId = statement.getMerchant().getId();
         Long courierId = statement.getCourier().getId();
 
@@ -94,6 +99,14 @@ public class ReconciliationService {
 
         statement.markReconciled(clock.instant(), lineRows.size());
         return ReconciliationEngine.summarize(classified, lineData);
+    }
+
+    /** Re-running would replace results that are under dispute, destroying the evidence. */
+    @Transactional(readOnly = true)
+    public void ensureNotDisputed(long statementId) {
+        if (disputes.existsByResultStatementId(statementId)) {
+            throw new ConflictException("Statement has disputes; it can no longer be re-processed.");
+        }
     }
 
     /** Rebuilds the summary from persisted rows with two aggregate queries (used by the report endpoint). */

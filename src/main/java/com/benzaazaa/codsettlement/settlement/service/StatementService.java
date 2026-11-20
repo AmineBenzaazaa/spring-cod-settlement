@@ -10,6 +10,7 @@ import com.benzaazaa.codsettlement.settlement.domain.ReconciliationResult;
 import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
 import com.benzaazaa.codsettlement.settlement.domain.StatementStatus;
 import com.benzaazaa.codsettlement.settlement.mapper.SettlementMapper;
+import com.benzaazaa.codsettlement.settlement.repository.DisputeRepository;
 import com.benzaazaa.codsettlement.settlement.repository.ReconciliationResultRepository;
 import com.benzaazaa.codsettlement.settlement.repository.RemittanceStatementRepository;
 import com.benzaazaa.codsettlement.settlement.web.dto.ReconciliationReportResponse;
@@ -17,6 +18,7 @@ import com.benzaazaa.codsettlement.settlement.web.dto.StatementFilter;
 import com.benzaazaa.codsettlement.settlement.web.dto.StatementResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,15 +32,17 @@ public class StatementService {
 
     private final RemittanceStatementRepository statements;
     private final ReconciliationResultRepository results;
+    private final DisputeRepository disputes;
     private final ReconciliationService reconciliation;
     private final SettlementMapper mapper;
     private final ApplicationEventPublisher events;
 
     public StatementService(RemittanceStatementRepository statements, ReconciliationResultRepository results,
-                            ReconciliationService reconciliation, SettlementMapper mapper,
+                            DisputeRepository disputes, ReconciliationService reconciliation, SettlementMapper mapper,
                             ApplicationEventPublisher events) {
         this.statements = statements;
         this.results = results;
+        this.disputes = disputes;
         this.reconciliation = reconciliation;
         this.mapper = mapper;
         this.events = events;
@@ -75,16 +79,18 @@ public class StatementService {
         List<ReconciliationResult> rows = outcome == null
                 ? results.findForReport(id)
                 : results.findForReport(id, outcome);
+        Set<Long> disputed = disputes.findResultIdsByStatementId(id); // one query, not one per row
         return new ReconciliationReportResponse(
                 mapper.toResponse(statement),
                 statement.getStatus() == StatementStatus.RECONCILED ? reconciliation.summaryFor(id) : null,
-                rows.stream().map(mapper::toResponse).toList());
+                rows.stream().map(r -> mapper.toResponse(r, disputed.contains(r.getId()))).toList());
     }
 
     /** Staff re-runs processing (e.g. after fixing orders, or a FAILED run). Async, like an upload. */
     @Transactional
     public StatementResponse reprocess(AuthenticatedUser user, long id) {
         RemittanceStatement statement = findVisible(user, id);
+        reconciliation.ensureNotDisputed(id);
         if (statement.getStatus() == StatementStatus.PROCESSING) {
             throw new ConflictException("Statement is already being processed.");
         }

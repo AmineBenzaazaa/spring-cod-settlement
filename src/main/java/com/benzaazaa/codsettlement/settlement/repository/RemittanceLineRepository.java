@@ -19,6 +19,27 @@ public interface RemittanceLineRepository extends JpaRepository<RemittanceLine, 
     MoneyTotals totalsForStatement(@Param("statementId") Long statementId);
 
     /**
+     * Cash the courier reported for our orders on reconciled statements. The inner join on
+     * {@code l.order} excludes unknown-tracking lines (they belong to no order of ours).
+     */
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.MoneyTotals(
+                sum(l.amountCollected), sum(l.fee))
+            from RemittanceLine l
+            where l.order.courier.id = :courierId
+              and l.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
+    MoneyTotals reportedTotals(@Param("courierId") Long courierId);
+
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.MoneyTotals(
+                sum(l.amountCollected), sum(l.fee))
+            from RemittanceLine l
+            where l.order.courier.id = :courierId
+              and l.statement.merchant.id = :merchantId
+              and l.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
+    MoneyTotals reportedTotals(@Param("courierId") Long courierId, @Param("merchantId") Long merchantId);
+
+    /**
      * One {@code DELETE} statement instead of loading and deleting entities one by one.
      * Bulk JPQL bypasses the persistence context: lines are never loaded before this call
      * in the same transaction, so there is nothing stale to clear.

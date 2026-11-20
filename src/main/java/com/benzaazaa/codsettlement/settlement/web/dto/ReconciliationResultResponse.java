@@ -12,5 +12,6 @@ public record ReconciliationResultResponse(
         RemittanceLineResponse line,
         BigDecimal expectedAmount,
         BigDecimal collectedAmount,
-        BigDecimal difference) {
+        BigDecimal difference,
+        boolean hasDispute) {
 }

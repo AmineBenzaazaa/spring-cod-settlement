@@ -60,6 +60,7 @@ public class StatementProcessor {
 
         try {
             ReconciliationSummary summary = tx.execute(status -> {
+                reconciliation.ensureNotDisputed(statementId); // replacing lines would hit disputed results
                 byte[] content = files.findById(statementId)
                         .orElseThrow(() -> new IllegalStateException("Stored file is missing"))
                         .getContent();

@@ -3,6 +3,7 @@ package com.benzaazaa.codsettlement.settlement.repository;
 import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
 import com.benzaazaa.codsettlement.settlement.domain.ReconciliationResult;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,6 +24,9 @@ public interface ReconciliationResultRepository extends JpaRepository<Reconcilia
             order by r.trackingNumber""")
     List<ReconciliationResult> findForReport(@Param("statementId") Long statementId,
                                              @Param("outcome") ReconciliationOutcome outcome);
+
+    @Query("select r from ReconciliationResult r join fetch r.statement where r.id = :id")
+    Optional<ReconciliationResult> findWithStatement(@Param("id") Long id);
 
     @Query("""
             select new com.benzaazaa.codsettlement.settlement.repository.OutcomeTotals(

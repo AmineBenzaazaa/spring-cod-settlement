@@ -44,4 +44,19 @@ public interface SettlementOrderRepository extends Repository<Order, Long> {
                                                          @Param("courierId") Long courierId,
                                                          @Param("from") Instant from,
                                                          @Param("to") Instant to);
+
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(o), sum(o.amountDue))
+            from Order o
+            where o.courier.id = :courierId
+              and o.status = com.benzaazaa.codsettlement.logistics.domain.OrderStatus.DELIVERED""")
+    CountAndSum deliveredTotals(@Param("courierId") Long courierId);
+
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(o), sum(o.amountDue))
+            from Order o
+            where o.courier.id = :courierId
+              and o.merchant.id = :merchantId
+              and o.status = com.benzaazaa.codsettlement.logistics.domain.OrderStatus.DELIVERED""")
+    CountAndSum deliveredTotals(@Param("courierId") Long courierId, @Param("merchantId") Long merchantId);
 }
