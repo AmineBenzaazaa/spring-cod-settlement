@@ -1,8 +1,20 @@
-# Local stack: API + PostgreSQL. The "demo" profile seeds merchants, couriers, users and orders.
-#   docker compose up --build
-#   curl localhost:8080/actuator/health
-# Host ports are configurable if 8080/5432 are taken: APP_PORT=18080 DB_PORT=15433 docker compose up
+# Local stack: Settlement Desk web UI + API + PostgreSQL. The "demo" profile seeds merchants,
+# couriers, users and orders.
+#   docker compose up --build -d
+#   open http://localhost:3200                    # web UI (nginx, proxies /api to the app)
+#   curl localhost:18080/actuator/health          # API directly
+# Host ports default to 3200 / 18080 / 15433 so the stack runs next to other local projects
+# (8080 and 5432 are usually taken). Override with WEB_PORT, APP_PORT and DB_PORT.
 services:
+  web:
+    build: ./web
+    ports:
+      - "${WEB_PORT:-3200}:80"
+    depends_on:
+      app:
+        condition: service_healthy
+    mem_limit: 64m
+
   app:
     build: .
     environment:
@@ -10,10 +22,14 @@ services:
       DB_URL: jdbc:postgresql://db:5432/cod_settlement
       DB_USERNAME: cod
       DB_PASSWORD: cod
+      DB_POOL_SIZE: 5
       # Local-only default. Real deployments must inject their own secret.
       APP_JWT_SECRET: ${APP_JWT_SECRET:-local-docker-only-secret-change-me-0123456789}
+      # Small footprint for laptops: heap capped at 50% of the 512 MB container limit (256 MB).
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=50 -XX:+UseSerialGC -XX:+ExitOnOutOfMemoryError"
     ports:
-      - "${APP_PORT:-8080}:8080"
+      - "${APP_PORT:-18080}:8080"
+    mem_limit: 512m
     depends_on:
       db:
         condition: service_healthy
@@ -25,9 +41,10 @@ services:
       POSTGRES_USER: cod
       POSTGRES_PASSWORD: cod
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${DB_PORT:-15433}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    mem_limit: 256m
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U cod -d cod_settlement"]
       interval: 5s
