@@ -1,16 +1,23 @@
 package com.benzaazaa.codsettlement.settlement.service;
 
+import com.benzaazaa.codsettlement.common.error.ConflictException;
 import com.benzaazaa.codsettlement.common.error.ResourceNotFoundException;
 import com.benzaazaa.codsettlement.common.web.PageResponse;
 import com.benzaazaa.codsettlement.security.AuthenticatedUser;
 import com.benzaazaa.codsettlement.security.TenantSpecifications;
+import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.benzaazaa.codsettlement.settlement.domain.ReconciliationResult;
 import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
+import com.benzaazaa.codsettlement.settlement.domain.StatementStatus;
 import com.benzaazaa.codsettlement.settlement.mapper.SettlementMapper;
+import com.benzaazaa.codsettlement.settlement.repository.ReconciliationResultRepository;
 import com.benzaazaa.codsettlement.settlement.repository.RemittanceStatementRepository;
+import com.benzaazaa.codsettlement.settlement.web.dto.ReconciliationReportResponse;
 import com.benzaazaa.codsettlement.settlement.web.dto.StatementFilter;
 import com.benzaazaa.codsettlement.settlement.web.dto.StatementResponse;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -22,11 +29,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class StatementService {
 
     private final RemittanceStatementRepository statements;
+    private final ReconciliationResultRepository results;
+    private final ReconciliationService reconciliation;
     private final SettlementMapper mapper;
+    private final ApplicationEventPublisher events;
 
-    public StatementService(RemittanceStatementRepository statements, SettlementMapper mapper) {
+    public StatementService(RemittanceStatementRepository statements, ReconciliationResultRepository results,
+                            ReconciliationService reconciliation, SettlementMapper mapper,
+                            ApplicationEventPublisher events) {
         this.statements = statements;
+        this.results = results;
+        this.reconciliation = reconciliation;
         this.mapper = mapper;
+        this.events = events;
     }
 
     public PageResponse<StatementResponse> list(AuthenticatedUser user, StatementFilter filter, Pageable pageable) {
@@ -52,6 +67,30 @@ public class StatementService {
 
     public StatementResponse get(AuthenticatedUser user, long id) {
         return mapper.toResponse(findVisible(user, id));
+    }
+
+    /** Statement + summary + results, optionally only one outcome. */
+    public ReconciliationReportResponse report(AuthenticatedUser user, long id, ReconciliationOutcome outcome) {
+        RemittanceStatement statement = findVisible(user, id);
+        List<ReconciliationResult> rows = outcome == null
+                ? results.findForReport(id)
+                : results.findForReport(id, outcome);
+        return new ReconciliationReportResponse(
+                mapper.toResponse(statement),
+                statement.getStatus() == StatementStatus.RECONCILED ? reconciliation.summaryFor(id) : null,
+                rows.stream().map(mapper::toResponse).toList());
+    }
+
+    /** Staff re-runs processing (e.g. after fixing orders, or a FAILED run). Async, like an upload. */
+    @Transactional
+    public StatementResponse reprocess(AuthenticatedUser user, long id) {
+        RemittanceStatement statement = findVisible(user, id);
+        if (statement.getStatus() == StatementStatus.PROCESSING) {
+            throw new ConflictException("Statement is already being processed.");
+        }
+        statement.requeue();
+        events.publishEvent(new StatementUploadedEvent(id));
+        return mapper.toResponse(statement);
     }
 
     RemittanceStatement findVisible(AuthenticatedUser user, long id) {

@@ -7,19 +7,25 @@ import com.benzaazaa.codsettlement.common.error.InvalidRequestException;
 import com.benzaazaa.codsettlement.logistics.domain.Courier;
 import com.benzaazaa.codsettlement.logistics.repository.CourierRepository;
 import com.benzaazaa.codsettlement.security.AuthenticatedUser;
+import com.benzaazaa.codsettlement.settlement.domain.RemittanceLine;
 import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
 import com.benzaazaa.codsettlement.settlement.domain.StatementFile;
 import com.benzaazaa.codsettlement.settlement.mapper.SettlementMapper;
+import com.benzaazaa.codsettlement.settlement.repository.ReconciliationResultRepository;
+import com.benzaazaa.codsettlement.settlement.repository.RemittanceLineRepository;
 import com.benzaazaa.codsettlement.settlement.repository.RemittanceStatementRepository;
 import com.benzaazaa.codsettlement.settlement.repository.StatementFileRepository;
 import com.benzaazaa.codsettlement.settlement.web.dto.StatementUploadForm;
 import com.benzaazaa.codsettlement.settlement.web.dto.StatementUploadResponse;
+import java.util.List;
 import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
@@ -39,6 +45,8 @@ public class StatementIngestionService {
 
     private final RemittanceStatementRepository statements;
     private final StatementFileRepository files;
+    private final RemittanceLineRepository lines;
+    private final ReconciliationResultRepository results;
     private final MerchantRepository merchants;
     private final CourierRepository couriers;
     private final AppUserRepository users;
@@ -48,12 +56,15 @@ public class StatementIngestionService {
     private final TransactionTemplate transactionTemplate;
 
     public StatementIngestionService(RemittanceStatementRepository statements, StatementFileRepository files,
+                                     RemittanceLineRepository lines, ReconciliationResultRepository results,
                                      MerchantRepository merchants, CourierRepository couriers,
                                      AppUserRepository users, RemittanceCsvParser parser,
                                      SettlementMapper mapper, ApplicationEventPublisher events,
                                      TransactionTemplate transactionTemplate) {
         this.statements = statements;
         this.files = files;
+        this.lines = lines;
+        this.results = results;
         this.merchants = merchants;
         this.couriers = couriers;
         this.users = users;
@@ -98,6 +109,22 @@ public class StatementIngestionService {
                     .map(s -> StatementUploadResponse.duplicateOf(mapper.toResponse(s)))
                     .orElseThrow(() -> race);
         }
+    }
+
+    /**
+     * (Re)creates the statement's lines from parsed rows. Idempotent.
+     * {@code MANDATORY}: must run inside the caller's transaction, together with the
+     * reconciliation, so a failure never leaves lines without results.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public int replaceLines(long statementId, List<ParsedLine> parsed) {
+        results.deleteByStatementId(statementId); // results reference lines
+        lines.deleteByStatementId(statementId);
+        RemittanceStatement statement = statements.getReferenceById(statementId);
+        lines.saveAll(parsed.stream()
+                .map(p -> new RemittanceLine(statement, p.rowNumber(), p.trackingNumber(), p.amountCollected(), p.fee()))
+                .toList());
+        return parsed.size();
     }
 
     private Merchant resolveMerchant(AuthenticatedUser user, Long requestedMerchantId) {

@@ -56,6 +56,13 @@ logging:
     root: ${LOG_LEVEL:INFO}
 
 app:
+  settlement:
+    # Statement periods are Moroccan business days.
+    zone: Africa/Casablanca
+  async:
+    core-pool-size: 2
+    max-pool-size: 4
+    queue-capacity: 100
   jwt:
     # No default on purpose: the app refuses to start without a 32+ character secret.
     secret: ${APP_JWT_SECRET:}

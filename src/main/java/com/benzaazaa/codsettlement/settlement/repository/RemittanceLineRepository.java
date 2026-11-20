@@ -11,11 +11,19 @@ public interface RemittanceLineRepository extends JpaRepository<RemittanceLine, 
 
     List<RemittanceLine> findByStatementIdOrderByRowNumber(Long statementId);
 
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.MoneyTotals(
+                sum(l.amountCollected), sum(l.fee))
+            from RemittanceLine l
+            where l.statement.id = :statementId""")
+    MoneyTotals totalsForStatement(@Param("statementId") Long statementId);
+
     /**
      * One {@code DELETE} statement instead of loading and deleting entities one by one.
-     * Bulk JPQL bypasses the persistence context, hence flush before and clear after.
+     * Bulk JPQL bypasses the persistence context: lines are never loaded before this call
+     * in the same transaction, so there is nothing stale to clear.
      */
-    @Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Modifying(flushAutomatically = true)
     @Query("delete from RemittanceLine l where l.statement.id = :statementId")
     int deleteByStatementId(@Param("statementId") Long statementId);
 }
