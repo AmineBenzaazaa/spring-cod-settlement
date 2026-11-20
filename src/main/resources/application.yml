@@ -69,3 +69,10 @@ app:
     access-token-ttl: ${APP_JWT_ACCESS_TTL:15m}
     refresh-token-ttl: ${APP_JWT_REFRESH_TTL:7d}
     issuer: cod-settlement
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  default-produces-media-type: application/json

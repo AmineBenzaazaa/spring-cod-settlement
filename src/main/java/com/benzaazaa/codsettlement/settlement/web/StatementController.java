@@ -15,6 +15,8 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Set;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -34,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /** Remittance statements: created by uploading a courier CSV, immutable afterwards. */
 @RestController
+@Tag(name = "Statements", description = "Remittance CSV upload and reconciliation reports")
 @RequestMapping("/api/statements")
 public class StatementController {
 
@@ -67,8 +70,8 @@ public class StatementController {
 
     @GetMapping
     public PageResponse<StatementResponse> list(@AuthenticationPrincipal AuthenticatedUser user,
-                                                StatementFilter filter,
-                                                @PageableDefault(size = 20, sort = "uploadedAt", direction = Sort.Direction.DESC)
+                                                @ParameterObject StatementFilter filter,
+                                                @ParameterObject @PageableDefault(size = 20, sort = "uploadedAt", direction = Sort.Direction.DESC)
                                                 Pageable pageable) {
         return statementService.list(user, filter, SortGuard.allow(pageable, SORTABLE));
     }

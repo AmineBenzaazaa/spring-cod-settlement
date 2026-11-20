@@ -8,6 +8,8 @@ import com.benzaazaa.codsettlement.logistics.web.dto.CourierResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Set;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Read: any authenticated user. Write: STAFF only (see the URL rules in SecurityConfig). */
 @RestController
+@Tag(name = "Couriers", description = "Courier reference data (staff writes)")
 @RequestMapping("/api/couriers")
 public class CourierController {
 
@@ -39,7 +42,7 @@ public class CourierController {
     @GetMapping
     public PageResponse<CourierResponse> list(@RequestParam(required = false) Boolean active,
                                               @RequestParam(required = false) String q,
-                                              @PageableDefault(size = 20, sort = "name") Pageable pageable) {
+                                              @ParameterObject @PageableDefault(size = 20, sort = "name") Pageable pageable) {
         return courierService.list(active, q, SortGuard.allow(pageable, SORTABLE));
     }
 

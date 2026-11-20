@@ -12,6 +12,8 @@ import com.benzaazaa.codsettlement.security.AuthenticatedUser;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Set;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Thin HTTP adapter: validate input, call the service, choose the status code. */
 @RestController
+@Tag(name = "Orders", description = "Merchant orders and delivery attempts")
 @RequestMapping("/api/orders")
 public class OrderController {
 
@@ -43,8 +46,8 @@ public class OrderController {
 
     @GetMapping
     public PageResponse<OrderResponse> list(@AuthenticationPrincipal AuthenticatedUser user,
-                                            OrderFilter filter,
-                                            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+                                            @ParameterObject OrderFilter filter,
+                                            @ParameterObject @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
                                             Pageable pageable) {
         return orderService.search(user, filter, SortGuard.allow(pageable, SORTABLE));
     }

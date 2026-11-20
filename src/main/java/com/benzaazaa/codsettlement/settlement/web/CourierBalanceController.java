@@ -3,6 +3,7 @@ package com.benzaazaa.codsettlement.settlement.web;
 import com.benzaazaa.codsettlement.security.AuthenticatedUser;
 import com.benzaazaa.codsettlement.settlement.service.CourierBalanceService;
 import com.benzaazaa.codsettlement.settlement.web.dto.CourierBalanceResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * here means logistics never depends on settlement: dependencies point one way.
  */
 @RestController
+@Tag(name = "Couriers", description = "Courier reference data (staff writes)")
 public class CourierBalanceController {
 
     private final CourierBalanceService balanceService;

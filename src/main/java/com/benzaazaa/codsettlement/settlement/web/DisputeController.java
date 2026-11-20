@@ -12,6 +12,8 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Disputes", description = "Contest discrepancies, resolve, export CSV")
 @RequestMapping("/api/disputes")
 public class DisputeController {
 
@@ -42,15 +45,15 @@ public class DisputeController {
     }
 
     @GetMapping
-    public PageResponse<DisputeResponse> list(@AuthenticationPrincipal AuthenticatedUser user, DisputeFilter filter,
-                                              @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+    public PageResponse<DisputeResponse> list(@AuthenticationPrincipal AuthenticatedUser user, @ParameterObject DisputeFilter filter,
+                                              @ParameterObject @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
                                               Pageable pageable) {
         return disputeService.list(user, filter, SortGuard.allow(pageable, SORTABLE));
     }
 
     /** Download the (filtered) disputes as CSV. Declared before /{id} only for readability; paths do not clash. */
     @GetMapping("/export")
-    public ResponseEntity<String> export(@AuthenticationPrincipal AuthenticatedUser user, DisputeFilter filter) {
+    public ResponseEntity<String> export(@AuthenticationPrincipal AuthenticatedUser user, @ParameterObject DisputeFilter filter) {
         return ResponseEntity.ok()
                 .contentType(TEXT_CSV)
                 .header(HttpHeaders.CONTENT_DISPOSITION,
