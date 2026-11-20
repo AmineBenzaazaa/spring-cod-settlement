@@ -33,6 +33,20 @@ public interface DisputeRepository extends JpaRepository<Dispute, Long>, JpaSpec
 
     boolean existsByResultStatementId(Long statementId);
 
+    /** Open disputes across all merchants (staff overview): how many, and how much is claimed. */
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(d), sum(d.claimedAmount))
+            from Dispute d
+            where d.status = com.benzaazaa.codsettlement.settlement.domain.DisputeStatus.OPEN""")
+    CountAndSum openTotals();
+
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(d), sum(d.claimedAmount))
+            from Dispute d
+            where d.status = com.benzaazaa.codsettlement.settlement.domain.DisputeStatus.OPEN
+              and d.merchant.id = :merchantId""")
+    CountAndSum openTotals(@Param("merchantId") Long merchantId);
+
     @Query("select d.result.id from Dispute d where d.result.statement.id = :statementId")
     Set<Long> findResultIdsByStatementId(@Param("statementId") Long statementId);
 }

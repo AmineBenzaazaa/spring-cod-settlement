@@ -37,6 +37,25 @@ public interface ReconciliationResultRepository extends JpaRepository<Reconcilia
     List<OutcomeTotals> totalsByOutcome(@Param("statementId") Long statementId);
 
     /**
+     * Non-matched results on reconciled statements: how many, and the absolute amount at stake
+     * ({@code abs}: a short payment and an over-payment both need attention).
+     */
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(r), sum(abs(r.difference)))
+            from ReconciliationResult r
+            where r.outcome <> com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome.MATCHED
+              and r.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
+    CountAndSum discrepancyTotals();
+
+    @Query("""
+            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(r), sum(abs(r.difference)))
+            from ReconciliationResult r
+            where r.outcome <> com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome.MATCHED
+              and r.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED
+              and r.statement.merchant.id = :merchantId""")
+    CountAndSum discrepancyTotals(@Param("merchantId") Long merchantId);
+
+    /**
      * Bulk delete. {@code flushAutomatically} pushes pending changes first. We do not use
      * {@code clearAutomatically}: results are never loaded before this call in the same
      * transaction, and clearing would detach the statement we just locked.

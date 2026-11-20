@@ -116,6 +116,50 @@ class StatementFlowIT extends AbstractIntegrationTest {
     }
 
     @Test
+    void overviewSumsBalancesOpenDisputesAndDiscrepanciesPerTenant() throws Exception {
+        Merchant medina = merchant("medina");
+        merchantUser("medina", medina);
+        long id = body(upload(atlasToken, CSV, null).andExpect(status().isAccepted())).at("/statement/id").asLong();
+        awaitStatus(id, StatementStatus.RECONCILED);
+        long resultId = body(mvc.perform(get("/api/statements/{id}/reconciliation", id)
+                .param("outcome", "AMOUNT_MISMATCH").header(HttpHeaders.AUTHORIZATION, atlasToken)))
+                .at("/results/0/id").asLong();
+        mvc.perform(post("/api/disputes").header(HttpHeaders.AUTHORIZATION, atlasToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"resultId\":" + resultId + ",\"reason\":\"short\"}"))
+                .andExpect(status().isCreated());
+
+        // Discrepancies: |150 - 200| + |99 - 0| + |0 - 80| = 229.00 over three results.
+        mvc.perform(get("/api/overview").header(HttpHeaders.AUTHORIZATION, atlasToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.merchantId").value(atlas.getId()))
+                .andExpect(jsonPath("$.expectedCollections").value("580.00"))
+                .andExpect(jsonPath("$.reportedCollections").value("450.00"))
+                .andExpect(jsonPath("$.fees").value("60.00"))
+                .andExpect(jsonPath("$.netRemitted").value("390.00"))
+                .andExpect(jsonPath("$.balanceOwed").value("130.00"))
+                .andExpect(jsonPath("$.openDisputes").value(1))
+                .andExpect(jsonPath("$.openDisputedAmount").value("50.00"))
+                .andExpect(jsonPath("$.discrepancies").value(3))
+                .andExpect(jsonPath("$.discrepancyAmount").value("229.00"))
+                .andExpect(jsonPath("$.couriers[0].code").value("speedex"))
+                .andExpect(jsonPath("$.couriers[0].balanceOwed").value("130.00"));
+
+        // Another tenant sees none of it; staff sees everything.
+        mvc.perform(get("/api/overview").header(HttpHeaders.AUTHORIZATION, login("medina")))
+                .andExpect(jsonPath("$.expectedCollections").value("0.00"))
+                .andExpect(jsonPath("$.openDisputes").value(0))
+                .andExpect(jsonPath("$.discrepancyAmount").value("0.00"));
+        mvc.perform(get("/api/overview").header(HttpHeaders.AUTHORIZATION, login("ops")))
+                .andExpect(jsonPath("$.merchantId").value(org.hamcrest.Matchers.nullValue()))
+                .andExpect(jsonPath("$.openDisputes").value(1))
+                .andExpect(jsonPath("$.discrepancyAmount").value("229.00"));
+        mvc.perform(get("/api/overview").param("merchantId", medina.getId().toString())
+                        .header(HttpHeaders.AUTHORIZATION, login("ops")))
+                .andExpect(jsonPath("$.discrepancies").value(0));
+    }
+
+    @Test
     void reUploadingTheSameFileIsANoOp() throws Exception {
         long first = body(upload(atlasToken, CSV, null).andExpect(status().isAccepted())).at("/statement/id").asLong();
         awaitStatus(first, StatementStatus.RECONCILED);
