@@ -1,0 +1,38 @@
+# Local stack: API + PostgreSQL. The "demo" profile seeds merchants, couriers, users and orders.
+#   docker compose up --build
+#   curl localhost:8080/actuator/health
+# Host ports are configurable if 8080/5432 are taken: APP_PORT=18080 DB_PORT=15433 docker compose up
+services:
+  app:
+    build: .
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-demo}
+      DB_URL: jdbc:postgresql://db:5432/cod_settlement
+      DB_USERNAME: cod
+      DB_PASSWORD: cod
+      # Local-only default. Real deployments must inject their own secret.
+      APP_JWT_SECRET: ${APP_JWT_SECRET:-local-docker-only-secret-change-me-0123456789}
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cod_settlement
+      POSTGRES_USER: cod
+      POSTGRES_PASSWORD: cod
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cod -d cod_settlement"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
