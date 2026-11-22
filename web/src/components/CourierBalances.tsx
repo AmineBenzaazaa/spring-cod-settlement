@@ -16,7 +16,7 @@ export function OwedPill({ courier }: { courier: CourierPosition }) {
     return <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-500/25 dark:text-emerald-300">{t('balances.settled')}</span>;
   }
   return (
-    <span data-testid="owed-pill" className={clsx('inline-block rounded-2xl px-2 text-right leading-snug py-0.5 text-[11px] font-medium ring-1 ring-inset',
+    <span data-testid="owed-pill" className={clsx('inline-block whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset',
       sign > 0 ? 'bg-rose-500/10 text-rose-700 ring-rose-500/25 dark:text-rose-300' : 'bg-amber-500/10 text-amber-700 ring-amber-500/25 dark:text-amber-300')}>
       {sign > 0
         ? t('balances.owes', { name: courier.name, amount: formatMoney(courier.balanceOwed, lang) })
@@ -121,7 +121,7 @@ export function BalanceChart({ couriers }: { couriers: CourierPosition[] }) {
           <YAxis tickLine={false} axisLine={false} width={44} tick={{ fill: 'currentColor', fontSize: 11 }}
             tickFormatter={(v: number) => new Intl.NumberFormat(lang === 'fr' ? 'fr-MA' : 'en-GB', { notation: 'compact' }).format(v)} />
           <Tooltip content={<ChartTooltip />} cursor={{ fill: 'currentColor', fillOpacity: 0.06 }} />
-          <Bar dataKey="expected" name={t('balances.expected')} radius={[4, 4, 0, 0]} maxBarSize={34} className="text-zinc-300 dark:text-zinc-600" fill="currentColor" />
+          <Bar dataKey="expected" name={t('balances.expected')} radius={[4, 4, 0, 0]} maxBarSize={34} className="text-chart-2" fill="currentColor" />
           <Bar dataKey="reported" name={t('balances.reported')} radius={[4, 4, 0, 0]} maxBarSize={34} className="text-accent" fill="currentColor" />
         </BarChart>
       </ResponsiveContainer>

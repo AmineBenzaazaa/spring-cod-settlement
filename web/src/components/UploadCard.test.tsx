@@ -43,7 +43,7 @@ describe('UploadCard', () => {
     expect(await screen.findByTestId('upload-accepted')).toHaveTextContent('Statement #4 uploaded');
   });
 
-  it('explains the SHA-256 duplicate check and links the existing statement', async () => {
+  it('explains the duplicate check and links the existing statement', async () => {
     vi.spyOn(api, 'upload').mockResolvedValue({ duplicate: true, statement });
     renderWithProviders(<UploadCard />);
     await fillAndDrop();
@@ -51,7 +51,7 @@ describe('UploadCard', () => {
 
     const notice = await screen.findByTestId('duplicate-notice');
     expect(notice).toHaveTextContent('Already uploaded');
-    expect(notice).toHaveTextContent('same SHA-256');
+    expect(notice).toHaveTextContent('already uploaded as statement');
     expect(screen.getByTestId('open-existing')).toHaveAttribute('href', '/statements/4');
   });
 

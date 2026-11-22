@@ -38,7 +38,7 @@ test('merchant uploads, reconciles and disputes; ops resolves', async ({ page })
   const body = await response.json();
   if (body.duplicate) {
     expect(response.status()).toBe(200);
-    await expect(page.getByTestId('duplicate-notice')).toContainText('same SHA-256');
+    await expect(page.getByTestId('duplicate-notice')).toContainText('already uploaded as statement');
     await page.getByTestId('open-existing').click();
   } else {
     expect(response.status()).toBe(202);
@@ -71,6 +71,7 @@ test('merchant uploads, reconciles and disputes; ops resolves', async ({ page })
   await expect(page.locator(`[data-testid="recon-row"][data-tracking="${tracking}"]`).getByTestId('disputed')).toBeVisible();
 
   // ---- finance ops resolves it --------------------------------------------------------------
+  await page.getByTestId('user-menu').click();
   await page.getByTestId('logout').click();
   await login(page, 'ops');
   await page.getByRole('link', { name: 'Disputes' }).click();

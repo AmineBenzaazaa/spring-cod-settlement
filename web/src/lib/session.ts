@@ -58,7 +58,7 @@ const listeners = new Set<Listener>();
 /**
  * Tiny external store (read with useSyncExternalStore). The API client reads it on every call,
  * so a refreshed token is used immediately, with no stale closure. Kept in sessionStorage: the
- * tab survives a reload, closing it signs out. Trade-off documented in the interview guide.
+ * tab survives a reload, closing it signs out. Trade-off documented in the README.
  */
 export const sessionStore = {
   get: (): Session | null => current,

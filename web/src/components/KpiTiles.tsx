@@ -32,13 +32,13 @@ export function KpiTilesView({ overview }: { overview: Overview }) {
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
       <Tile testId="kpi-expected" label={t('kpi.expected')} value={big(overview.expectedCollections)}
         hint={t('kpi.expectedHint', { n: formatNumber(delivered, lang) })}
-        icon={<Receipt className="h-3.5 w-3.5" />} tone="bg-zinc-500/10 text-zinc-600 dark:text-zinc-300" />
+        icon={<Receipt className="h-3.5 w-3.5" />} tone="bg-subtle text-muted" />
       <Tile testId="kpi-reported" label={t('kpi.reported')} value={big(overview.reportedCollections)}
         hint={t('kpi.reportedHint', { pct: pct == null ? '—' : `${pct.replace('.', lang === 'fr' ? ',' : '.')} %` })}
-        icon={<HandCoins className="h-3.5 w-3.5" />} tone="bg-sky-500/10 text-sky-600 dark:text-sky-300" />
+        icon={<HandCoins className="h-3.5 w-3.5" />} tone="bg-accent/10 text-accent" />
       <Tile testId="kpi-net" label={t('kpi.net')} value={big(overview.netRemitted)}
         hint={t('kpi.netHint', { fees: formatMoney(overview.fees, lang) })}
-        icon={<Banknote className="h-3.5 w-3.5" />} tone="bg-emerald-500/10 text-emerald-600 dark:text-emerald-300" />
+        icon={<Banknote className="h-3.5 w-3.5" />} tone="bg-signal/15 text-signal-ink" />
       <Tile testId="kpi-disputes" label={t('kpi.disputes')} value={formatNumber(overview.openDisputes, lang)}
         hint={t('kpi.disputesHint', { amount: formatMoney(overview.openDisputedAmount, lang) })}
         icon={<Gavel className="h-3.5 w-3.5" />} tone="bg-amber-500/10 text-amber-600 dark:text-amber-300" />
