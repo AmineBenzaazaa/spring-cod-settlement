@@ -1,25 +1,55 @@
-# spring-cod-settlement
+<p align="center"><img src="brand/logo/mse-logo.svg" alt="MSE Transport" height="44"></p>
 
-A Spring Boot REST API that settles **cash-on-delivery (COD)** money between e-commerce
-merchants and the courier companies that collect cash at the customer's door.
+# MSE Settle
 
-Couriers send merchants a periodic **remittance CSV** ("these are the parcels we delivered,
-the cash we collected and the fee we kept"). This service ingests those files, **reconciles
-every line against the merchant's orders**, flags discrepancies, computes how much cash each
-courier still owes, and lets merchants open and export **disputes**.
+**Courier cash settlement for cash-on-delivery e-commerce.** MSE Settle checks every courier
+remittance against the merchant's orders, line by line, shows who still owes what in MAD, and
+turns each discrepancy into a dispute that finance can resolve.
 
-It is the Java port of [django-cod-settlement](https://github.com/AmineBenzaazaa/django-cod-settlement):
-same domain and rules, written the way a Spring team would write it.
+![MSE Settle overview: cash expected, reported and remitted, with per-courier balances](docs/screenshots/overview.png)
 
-![Settlement Desk overview](docs/img/overview.png)
+MSE Settle is one of the three products of **MSE Transport**, a software suite for cash-on-delivery
+logistics in Morocco:
+
+| Product | What it does | Repository |
+|---|---|---|
+| MSE Dispatch | Live parcel operations: orders, courier assignment, delivery attempts, customer SMS | `spring-parcel-platform` |
+| **MSE Settle** | Courier cash settlement and reconciliation (this repository) | `spring-cod-settlement` |
+| MSE Copilot | AI assistant over settlement data, with checked figures and sources | `spring-ai-settlement-copilot` |
+
+Brand system: [`brand/BRAND.md`](brand/BRAND.md). Product overview: [`docs/PRODUCT-OVERVIEW.md`](docs/PRODUCT-OVERVIEW.md).
 
 Stack: Java 21 · Spring Boot 3.5 · Spring Web · Spring Data JPA / Hibernate 6 · PostgreSQL 16 ·
 Flyway · Spring Security (stateless JWT) · Bean Validation · MapStruct · springdoc-openapi ·
-JUnit 5 · Mockito · Testcontainers · JaCoCo · Docker · GitHub Actions.
+React 18 + TypeScript · Tailwind · TanStack Query · JUnit 5 · Mockito · Testcontainers · Vitest ·
+Playwright · JaCoCo · Docker · GitHub Actions.
 
 ---
 
-## Features
+## The problem
+
+In Moroccan e-commerce most orders are paid **in cash, at the door**. The courier company collects
+that cash, keeps its fee, and pays the rest back to the merchant days or weeks later, together with
+a **remittance file** ("these are the parcels we delivered, the cash we collected and the fee we
+kept").
+
+Checking that file by hand against hundreds of orders is slow and error-prone, and the errors are
+money: a parcel paid 50 MAD short, a tracking number the merchant never shipped, a delivered parcel
+that is simply missing from the file. Finance teams find out late, argue by email, and lose track of
+what each courier still owes.
+
+## What MSE Settle does
+
+1. The merchant **uploads the courier's remittance CSV** (courier + period). Every row is validated
+   up front, and the same file can never be imported twice.
+2. Each line is **reconciled in the background** against the merchant's orders: matched, amount
+   mismatch, unknown tracking number, or delivered but missing from the statement.
+3. The overview shows **cash expected, reported, fees, net remitted and the balance each courier
+   still owes**.
+4. Any discrepancy becomes a **dispute** in one click, prefilled with the difference; finance ops
+   resolve it, and the list exports to CSV for the courier.
+
+## Capabilities
 
 - **JWT auth** (access + refresh tokens), roles `MERCHANT` and `STAFF`, and **per-merchant data
   isolation** enforced in the service/repository layer (a foreign ID is a 404, never a leak).
@@ -36,43 +66,49 @@ JUnit 5 · Mockito · Testcontainers · JaCoCo · Docker · GitHub Actions.
 - **RFC 7807 ProblemDetail** errors everywhere (validation, 401/403 from the security chain, 404,
   409, 422, 500 without leaking internals).
 - **OpenAPI 3** + Swagger UI, Actuator health/readiness probes, `demo` profile with seed data.
-- **Settlement Desk web UI** (React + TypeScript) for merchants and finance ops, see below.
-- **205 backend tests + 40 Vitest + 1 Playwright e2e**, JaCoCo coverage gate in `mvn verify` (currently 96 % of lines overall, 99 % in the service layer).
+- **MSE Settle web app** (React + TypeScript) for merchants and finance ops, see below.
+- **Quality gates**: unit, slice, Testcontainers and browser tests, plus a JaCoCo coverage gate in
+  `mvn verify` (see [Quality](#quality)).
 
-## Web UI: Settlement Desk
+## The app
 
 A React web app in [`web/`](web/) for merchants and finance ops, served by nginx at
 **http://localhost:3200** (it proxies `/api` to the Spring Boot app, so the browser sees one origin
 and the API needs no CORS setup).
 
-| Reconciliation of a courier statement | Dispute resolution (finance ops, dark mode) |
+| Reconciliation of a courier statement | Disputes, finance view (dark mode) |
 |---|---|
-| ![Reconciliation](docs/img/reconciliation.png) | ![Disputes](docs/img/disputes-dark.png) |
+| ![Reconciliation](docs/screenshots/reconciliation.png) | ![Disputes](docs/screenshots/disputes-dark.png) |
+| **Statement upload and history** | **Sign in** |
+| ![Statements](docs/screenshots/statements.png) | ![Sign in](docs/screenshots/login.png) |
 
 - **Overview**: COD expected vs reported, net remitted, open disputes and the discrepancy amount,
-  plus a per-courier balance table ("Speedex Colis still owes 530.50 MAD") and a chart
-  (one call to `GET /api/overview`).
-- **Statements**: drag-and-drop CSV upload (courier + period), an upload history that polls
-  while processing runs, the SHA-256 duplicate notice, and every rejected row from the 400.
-- **Reconciliation**: lines colour-coded MATCHED / AMOUNT_MISMATCH / UNKNOWN_TRACKING /
-  MISSING_FROM_STATEMENT with expected, collected and signed difference, filters, and a
+  a per-courier balance table ("Speedex Colis still owes 530.50 MAD") and a chart, from one call
+  to `GET /api/overview`.
+- **Statements**: drag-and-drop CSV upload (courier + period), an upload history that refreshes
+  while processing runs, a duplicate-file notice, and every rejected row listed at once.
+- **Reconciliation**: lines colour-coded by outcome (matched, amount mismatch, unknown tracking,
+  missing from statement) with expected, collected and signed difference, filters, and a
   one-click prefilled "Open dispute".
-- **Disputes**: list, detail drawer, staff-only resolution (controls hidden for merchants, 403
-  from the API anyway), CSV export through the existing endpoint.
+- **Disputes**: list, detail drawer, finance-only resolution (controls hidden for merchants, 403
+  from the API anyway), CSV export.
 - **Orders and couriers**: searchable, paginated tables; orders expand to their delivery attempts.
-- Light/dark and EN/FR, same design tokens as the
-  [parcel-platform](https://github.com/AmineBenzaazaa/spring-parcel-platform) dashboard.
+- **Suite shell**: product switcher (Dispatch, Settle, Copilot), user menu, light/dark, English and
+  French, skip link and visible focus rings. Brand tokens shared with MSE Dispatch and MSE Copilot.
 
 Stack: Vite, React 18, TypeScript (strict), Tailwind, TanStack Query, React Router, Radix Dialog,
 Recharts. Money is formatted from the API's decimal strings with BigInt cents, never floats.
+Product URLs in the switcher default to the local compose ports and can be set at build time with
+`VITE_DISPATCH_URL`, `VITE_SETTLE_URL` and `VITE_COPILOT_URL`.
 
-**Demo (2 minutes)**
+**Try it (2 minutes)**
 
-1. `docker compose up --build -d`, open http://localhost:3200. The login is prefilled with
-   `atlas`; demo chips switch to `medina` or `ops` (password `demo-pass-123`).
+1. `docker compose up --build -d`, open http://localhost:3200. The sign-in form is prefilled with
+   the sample merchant `atlas`; the sample-account chips switch to `medina` or the finance user
+   `ops` (password `demo-pass-123`).
 2. As **atlas**, open *Statements*, pick *Speedex Colis*, period 2026-10-01 to 2026-10-31, drop
    `fixtures/sample_remittance.csv`. The row goes Queued, Processing, Reconciled on its own.
-   Upload it again to see the SHA-256 duplicate notice.
+   Upload it again to see the duplicate-file notice.
 3. Open the statement: 11 matched lines, one short payment (−50.00), one unknown tracking
    number (+199.00) and one delivered parcel missing from the file. Click *Open dispute*.
 4. Sign out, sign in as **ops**, open *Disputes*, click the dispute, resolve it. *Export CSV*
@@ -82,7 +118,7 @@ Recharts. Money is formatted from the API's decimal strings with BigInt cents, n
 cd web
 npm ci
 npm run dev          # http://localhost:5174, proxies /api to localhost:18080
-npm test             # Vitest: money, API client and refresh, polling hook, components
+npm test             # Vitest: money, API client and refresh, polling hook, shell, components
 npm run e2e          # Playwright against the compose stack on :3200
 ```
 
@@ -107,7 +143,7 @@ flowchart LR
 ```
 
 ```
-src/main/java/com/benzaazaa/codsettlement/
+src/main/java/com/msetransport/codsettlement/
   account/      Merchant (tenant) and AppUser entities + repositories
   auth/         POST /api/auth/login, /refresh, GET /me
   security/     SecurityConfig, JwtService, JwtAuthenticationFilter, TenantSpecifications
@@ -162,11 +198,11 @@ balanceOwed         = expectedCollections − reportedCollections
 
 ## Running it
 
-### Docker (web UI + app + PostgreSQL, demo data included)
+### Docker (web app + API + PostgreSQL, sample data included)
 
 ```bash
 docker compose up --build -d
-open http://localhost:3200                    # Settlement Desk web UI
+open http://localhost:3200                    # MSE Settle web app
 curl localhost:18080/actuator/health          # {"status":"UP",...}
 open http://localhost:18080/swagger-ui.html   # click "Authorize", paste an access token
 docker compose down                           # add -v to drop the database volume
@@ -176,7 +212,7 @@ Host ports default to **3200** (web), **18080** (API) and **15433** (PostgreSQL)
 next to other local projects; override with `WEB_PORT`, `APP_PORT` and `DB_PORT`. The app
 container is capped at 512 MB with the heap at 50 % of it (`-XX:MaxRAMPercentage=50`).
 
-Demo users (password `demo-pass-123`): `ops` (STAFF), `atlas` and `medina` (MERCHANT).
+Sample users (password `demo-pass-123`): `ops` (STAFF), `atlas` and `medina` (MERCHANT).
 `fixtures/sample_remittance.csv` matches the seeded orders of `atlas` with courier `speedex` (id 1).
 
 ### Local (JDK 21 + a PostgreSQL)
@@ -189,7 +225,7 @@ cp .env.example .env && set -a && source .env && set +a
 
 `APP_JWT_SECRET` is required (32+ characters): the app refuses to start without it.
 
-### Tests
+### Quality
 
 ```bash
 ./mvnw test      # unit + @WebMvcTest slices (no Docker needed)
@@ -203,7 +239,7 @@ open target/site/jacoco/index.html
 | Controllers + security | `@WebMvcTest` + real `SecurityFilterChain` + real JWTs | 36 |
 | Repositories | `@DataJpaTest` on Testcontainers PostgreSQL | 9 |
 | End to end | `@SpringBootTest` + MockMvc + Testcontainers + Awaitility | 20 |
-| Web UI | Vitest + Testing Library (`cd web && npm test`) | 40 |
+| Web app | Vitest + Testing Library (`cd web && npm test`) | 42 |
 | Browser e2e | Playwright through nginx (`cd web && npm run e2e`) | 1 |
 
 Unit and slice tests run with Surefire (`*Test`), Testcontainers tests with Failsafe (`*IT`);
@@ -311,33 +347,6 @@ as the last line of defence.
 
 **Testcontainers, not H2.** Tests run against the same PostgreSQL 16 as production, so row locks,
 `numeric` arithmetic, `bytea`, `timestamptz` and check constraints behave exactly as they will live.
-
-## Django vs Spring: same domain, two stacks
-
-| Concern | Django version | Spring version |
-|---|---|---|
-| Web layer | DRF `ViewSet` + router | `@RestController` + `@RequestMapping` |
-| Input validation | DRF `Serializer` | DTO `record` + Bean Validation (`@NotNull`, `@Digits`, custom `@ValidPeriod`) |
-| Output shape | `ModelSerializer` | `record` DTOs mapped by MapStruct (compile-time) |
-| ORM | Django ORM, `QuerySet` | Spring Data JPA / Hibernate, `Specification`, JPQL |
-| Filtering | `django-filter` `FilterSet` | `Specification` composition from a filter `record` |
-| Migrations | `makemigrations` / `migrate` | Flyway SQL files (`V1__...sql`), `ddl-auto=validate` |
-| Auth | SimpleJWT | Spring Security filter chain + jjwt, custom `OncePerRequestFilter` |
-| Permissions | `BasePermission` + queryset mixin | URL rules, `@PreAuthorize`, `TenantSpecifications` |
-| Transactions | `ATOMIC_REQUESTS`, `transaction.atomic` | `@Transactional` on services, `TransactionTemplate` |
-| Background jobs | Celery + Redis, `on_commit(delay)` | `@Async` executor + `@TransactionalEventListener(AFTER_COMMIT)` |
-| Row lock | `select_for_update()` | `@Lock(PESSIMISTIC_WRITE)` |
-| Money | `Decimal`, `DecimalField(12,2)` | `BigDecimal`, `numeric(12,2)`, scale 2 `HALF_UP` |
-| Errors | DRF exception handler | `@RestControllerAdvice` → RFC 7807 `ProblemDetail` |
-| API docs | drf-spectacular | springdoc-openapi |
-| Seed data | `manage.py seed_demo` | `CommandLineRunner` in `@Profile("demo")` |
-| Tests | pytest + factory_boy, SQLite/PostgreSQL | JUnit 5 + Mockito + `@WebMvcTest` + `@DataJpaTest` + Testcontainers |
-| Coverage | coverage.py | JaCoCo (merged unit + integration) |
-
-## Interview guide
-
-[`docs/INTERVIEW-GUIDE.md`](docs/INTERVIEW-GUIDE.md) maps NestJS and Django concepts to Spring, walks
-through one request file by file, and lists likely interview questions about this codebase.
 
 ## License
 
