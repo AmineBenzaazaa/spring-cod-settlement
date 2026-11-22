@@ -1,8 +1,8 @@
-package com.benzaazaa.codsettlement.settlement.domain;
+package com.msetransport.codsettlement.settlement.domain;
 
-import com.benzaazaa.codsettlement.account.domain.AppUser;
-import com.benzaazaa.codsettlement.account.domain.Merchant;
-import com.benzaazaa.codsettlement.common.error.BusinessRuleException;
+import com.msetransport.codsettlement.account.domain.AppUser;
+import com.msetransport.codsettlement.account.domain.Merchant;
+import com.msetransport.codsettlement.common.error.BusinessRuleException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

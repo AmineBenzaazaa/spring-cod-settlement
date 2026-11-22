@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.domain;
+package com.msetransport.codsettlement.settlement.domain;
 
 /** What staff can decide when closing a dispute. A separate type makes "resolve to OPEN" unrepresentable. */
 public enum DisputeDecision {

@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;

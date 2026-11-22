@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
 public record ProcessingResult(long statementId, Outcome outcome, ReconciliationSummary summary, String error) {
 

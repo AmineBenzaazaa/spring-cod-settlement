@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome;
 import java.math.BigDecimal;
 
 /** @param line {@code null} for MISSING_FROM_STATEMENT (there is no line for it) */

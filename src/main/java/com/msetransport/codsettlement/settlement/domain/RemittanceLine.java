@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.domain;
+package com.msetransport.codsettlement.settlement.domain;
 
-import com.benzaazaa.codsettlement.logistics.domain.Order;
+import com.msetransport.codsettlement.logistics.domain.Order;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

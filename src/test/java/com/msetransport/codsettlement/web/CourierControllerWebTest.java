@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.web;
+package com.msetransport.codsettlement.web;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -10,15 +10,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.benzaazaa.codsettlement.common.web.PageResponse;
-import com.benzaazaa.codsettlement.logistics.service.CourierService;
-import com.benzaazaa.codsettlement.logistics.web.CourierController;
-import com.benzaazaa.codsettlement.logistics.web.dto.CourierResponse;
-import com.benzaazaa.codsettlement.settlement.service.CourierBalanceService;
-import com.benzaazaa.codsettlement.settlement.web.CourierBalanceController;
-import com.benzaazaa.codsettlement.settlement.web.dto.CourierBalanceResponse;
-import com.benzaazaa.codsettlement.support.TestData;
-import com.benzaazaa.codsettlement.support.WebSliceTestConfig;
+import com.msetransport.codsettlement.common.web.PageResponse;
+import com.msetransport.codsettlement.logistics.service.CourierService;
+import com.msetransport.codsettlement.logistics.web.CourierController;
+import com.msetransport.codsettlement.logistics.web.dto.CourierResponse;
+import com.msetransport.codsettlement.settlement.service.CourierBalanceService;
+import com.msetransport.codsettlement.settlement.web.CourierBalanceController;
+import com.msetransport.codsettlement.settlement.web.dto.CourierBalanceResponse;
+import com.msetransport.codsettlement.support.TestData;
+import com.msetransport.codsettlement.support.WebSliceTestConfig;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.error;
+package com.msetransport.codsettlement.common.error;
 
 import java.util.List;
 

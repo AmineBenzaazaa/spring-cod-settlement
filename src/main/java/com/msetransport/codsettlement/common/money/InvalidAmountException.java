@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.money;
+package com.msetransport.codsettlement.common.money;
 
 /** Thrown when a value cannot be interpreted as a valid money amount. */
 public class InvalidAmountException extends IllegalArgumentException {

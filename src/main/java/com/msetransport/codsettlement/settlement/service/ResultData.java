@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import com.benzaazaa.codsettlement.common.money.Money;
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.msetransport.codsettlement.common.money.Money;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome;
 import java.math.BigDecimal;
 
 public record ResultData(ReconciliationOutcome outcome, String trackingNumber, BigDecimal expectedAmount,

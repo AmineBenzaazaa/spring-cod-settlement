@@ -1,19 +1,19 @@
-package com.benzaazaa.codsettlement.auth.service;
+package com.msetransport.codsettlement.auth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.benzaazaa.codsettlement.account.domain.AppUser;
-import com.benzaazaa.codsettlement.account.repository.AppUserRepository;
-import com.benzaazaa.codsettlement.auth.web.dto.LoginRequest;
-import com.benzaazaa.codsettlement.auth.web.dto.TokenResponse;
-import com.benzaazaa.codsettlement.security.InvalidTokenException;
-import com.benzaazaa.codsettlement.security.JwtProperties;
-import com.benzaazaa.codsettlement.security.JwtService;
-import com.benzaazaa.codsettlement.security.SecurityUser;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.account.domain.AppUser;
+import com.msetransport.codsettlement.account.repository.AppUserRepository;
+import com.msetransport.codsettlement.auth.web.dto.LoginRequest;
+import com.msetransport.codsettlement.auth.web.dto.TokenResponse;
+import com.msetransport.codsettlement.security.InvalidTokenException;
+import com.msetransport.codsettlement.security.JwtProperties;
+import com.msetransport.codsettlement.security.JwtService;
+import com.msetransport.codsettlement.security.SecurityUser;
+import com.msetransport.codsettlement.support.TestData;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.ZoneOffset;

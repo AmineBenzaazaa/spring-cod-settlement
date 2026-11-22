@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.repository;
+package com.msetransport.codsettlement.settlement.repository;
 
-import com.benzaazaa.codsettlement.logistics.domain.Order;
+import com.msetransport.codsettlement.logistics.domain.Order;
 import java.time.Instant;
 import java.util.List;
 import org.springframework.data.repository.Repository;
@@ -34,7 +34,7 @@ public interface SettlementOrderRepository extends Repository<Order, Long> {
             select o from Order o
             where o.merchant.id = :merchantId
               and o.courier.id = :courierId
-              and o.status = com.benzaazaa.codsettlement.logistics.domain.OrderStatus.DELIVERED
+              and o.status = com.msetransport.codsettlement.logistics.domain.OrderStatus.DELIVERED
               and o.deliveredAt >= :from and o.deliveredAt < :to
               and not exists (
                   select 1 from RemittanceLine l
@@ -46,17 +46,17 @@ public interface SettlementOrderRepository extends Repository<Order, Long> {
                                                          @Param("to") Instant to);
 
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(o), sum(o.amountDue))
+            select new com.msetransport.codsettlement.settlement.repository.CountAndSum(count(o), sum(o.amountDue))
             from Order o
             where o.courier.id = :courierId
-              and o.status = com.benzaazaa.codsettlement.logistics.domain.OrderStatus.DELIVERED""")
+              and o.status = com.msetransport.codsettlement.logistics.domain.OrderStatus.DELIVERED""")
     CountAndSum deliveredTotals(@Param("courierId") Long courierId);
 
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(o), sum(o.amountDue))
+            select new com.msetransport.codsettlement.settlement.repository.CountAndSum(count(o), sum(o.amountDue))
             from Order o
             where o.courier.id = :courierId
               and o.merchant.id = :merchantId
-              and o.status = com.benzaazaa.codsettlement.logistics.domain.OrderStatus.DELIVERED""")
+              and o.status = com.msetransport.codsettlement.logistics.domain.OrderStatus.DELIVERED""")
     CountAndSum deliveredTotals(@Param("courierId") Long courierId, @Param("merchantId") Long merchantId);
 }

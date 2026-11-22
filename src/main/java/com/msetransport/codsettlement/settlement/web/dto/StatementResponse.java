@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
-import com.benzaazaa.codsettlement.settlement.domain.StatementStatus;
+import com.msetransport.codsettlement.settlement.domain.StatementStatus;
 import java.time.Instant;
 import java.time.LocalDate;
 

@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import com.benzaazaa.codsettlement.config.AsyncConfig;
+import com.msetransport.codsettlement.config.AsyncConfig;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -11,8 +11,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
  *
  * <ul>
  *   <li>{@code AFTER_COMMIT}: the worker never looks for a statement row that is not visible
- *       yet, and nothing is processed if the upload rolls back (Django: {@code on_commit}).</li>
- *   <li>{@code @Async}: the HTTP request returns 202 immediately (Celery: {@code .delay()}).</li>
+ *       yet, and nothing is processed if the upload rolls back.</li>
+ *   <li>{@code @Async}: the HTTP request returns 202 immediately.</li>
  * </ul>
  * Both annotations only work through the Spring proxy, which is why this listener is a
  * separate bean from the code that publishes the event.

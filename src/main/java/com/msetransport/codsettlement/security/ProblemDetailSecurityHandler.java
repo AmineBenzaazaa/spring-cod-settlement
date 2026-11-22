@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProblemDetailSecurityHandler implements AuthenticationEntryPoint, AccessDeniedHandler {
 
-    private static final String TYPE_PREFIX = "https://cod-settlement.benzaazaa.com/problems/";
+    private static final String TYPE_PREFIX = "https://settle.msetransport.com/problems/";
 
     private final ObjectMapper objectMapper;
 

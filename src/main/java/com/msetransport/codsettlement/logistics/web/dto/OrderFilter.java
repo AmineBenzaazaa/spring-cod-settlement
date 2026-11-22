@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.logistics.web.dto;
+package com.msetransport.codsettlement.logistics.web.dto;
 
-import com.benzaazaa.codsettlement.logistics.domain.OrderStatus;
+import com.msetransport.codsettlement.logistics.domain.OrderStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;

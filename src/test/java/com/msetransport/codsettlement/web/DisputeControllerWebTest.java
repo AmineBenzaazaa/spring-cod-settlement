@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.web;
+package com.msetransport.codsettlement.web;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -11,13 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.benzaazaa.codsettlement.settlement.domain.DisputeStatus;
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
-import com.benzaazaa.codsettlement.settlement.service.DisputeService;
-import com.benzaazaa.codsettlement.settlement.web.DisputeController;
-import com.benzaazaa.codsettlement.settlement.web.dto.DisputeResponse;
-import com.benzaazaa.codsettlement.support.TestData;
-import com.benzaazaa.codsettlement.support.WebSliceTestConfig;
+import com.msetransport.codsettlement.settlement.domain.DisputeStatus;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.msetransport.codsettlement.settlement.service.DisputeService;
+import com.msetransport.codsettlement.settlement.web.DisputeController;
+import com.msetransport.codsettlement.settlement.web.dto.DisputeResponse;
+import com.msetransport.codsettlement.support.TestData;
+import com.msetransport.codsettlement.support.WebSliceTestConfig;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

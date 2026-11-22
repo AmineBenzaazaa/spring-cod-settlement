@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.domain;
+package com.msetransport.codsettlement.settlement.domain;
 
 public enum StatementStatus {
     /** Stored and queued for asynchronous processing. */

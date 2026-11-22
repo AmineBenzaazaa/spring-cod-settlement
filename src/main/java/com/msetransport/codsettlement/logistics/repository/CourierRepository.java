@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.logistics.repository;
+package com.msetransport.codsettlement.logistics.repository;
 
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.logistics.domain.Courier;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

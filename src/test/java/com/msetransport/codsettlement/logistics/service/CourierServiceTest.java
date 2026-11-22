@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.logistics.service;
+package com.msetransport.codsettlement.logistics.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -7,14 +7,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.benzaazaa.codsettlement.common.error.ConflictException;
-import com.benzaazaa.codsettlement.common.error.ResourceNotFoundException;
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
-import com.benzaazaa.codsettlement.logistics.mapper.LogisticsMapperImpl;
-import com.benzaazaa.codsettlement.logistics.repository.CourierRepository;
-import com.benzaazaa.codsettlement.logistics.repository.OrderRepository;
-import com.benzaazaa.codsettlement.logistics.web.dto.CourierRequest;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.common.error.ConflictException;
+import com.msetransport.codsettlement.common.error.ResourceNotFoundException;
+import com.msetransport.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.logistics.mapper.LogisticsMapperImpl;
+import com.msetransport.codsettlement.logistics.repository.CourierRepository;
+import com.msetransport.codsettlement.logistics.repository.OrderRepository;
+import com.msetransport.codsettlement.logistics.web.dto.CourierRequest;
+import com.msetransport.codsettlement.support.TestData;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.error;
+package com.msetransport.codsettlement.common.error;
 
 /**
  * The resource does not exist <em>for the caller</em>. A merchant asking for another

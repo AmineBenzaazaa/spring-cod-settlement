@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement;
+package com.msetransport.codsettlement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
 import java.math.BigDecimal;
 

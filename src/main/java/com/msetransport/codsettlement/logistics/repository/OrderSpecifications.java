@@ -1,8 +1,8 @@
-package com.benzaazaa.codsettlement.logistics.repository;
+package com.msetransport.codsettlement.logistics.repository;
 
-import com.benzaazaa.codsettlement.logistics.domain.Order;
-import com.benzaazaa.codsettlement.logistics.domain.OrderStatus;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderFilter;
+import com.msetransport.codsettlement.logistics.domain.Order;
+import com.msetransport.codsettlement.logistics.domain.OrderStatus;
+import com.msetransport.codsettlement.logistics.web.dto.OrderFilter;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Locale;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
- * Composable WHERE clauses for orders (the Spring Data equivalent of a django-filter FilterSet).
+ * Composable WHERE clauses for orders.
  * Each method returns {@code null} when its filter is not set, and {@link #matching} only
  * combines the ones that are.
  */

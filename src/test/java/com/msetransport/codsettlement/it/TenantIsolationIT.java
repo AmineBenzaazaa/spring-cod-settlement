@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.it;
+package com.msetransport.codsettlement.it;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -7,12 +7,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.benzaazaa.codsettlement.account.domain.Merchant;
-import com.benzaazaa.codsettlement.logistics.domain.AttemptOutcome;
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
-import com.benzaazaa.codsettlement.logistics.domain.Order;
-import com.benzaazaa.codsettlement.support.AbstractIntegrationTest;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.account.domain.Merchant;
+import com.msetransport.codsettlement.logistics.domain.AttemptOutcome;
+import com.msetransport.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.logistics.domain.Order;
+import com.msetransport.codsettlement.support.AbstractIntegrationTest;
+import com.msetransport.codsettlement.support.TestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;

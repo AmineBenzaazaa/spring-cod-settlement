@@ -1,11 +1,11 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.benzaazaa.codsettlement.account.domain.Role;
-import com.benzaazaa.codsettlement.support.MutableClock;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.account.domain.Role;
+import com.msetransport.codsettlement.support.MutableClock;
+import com.msetransport.codsettlement.support.TestData;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
 

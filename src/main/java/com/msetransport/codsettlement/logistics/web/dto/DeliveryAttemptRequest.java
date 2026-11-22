@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.logistics.web.dto;
+package com.msetransport.codsettlement.logistics.web.dto;
 
-import com.benzaazaa.codsettlement.logistics.domain.AttemptOutcome;
+import com.msetransport.codsettlement.logistics.domain.AttemptOutcome;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;

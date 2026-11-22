@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.account.domain;
+package com.msetransport.codsettlement.account.domain;
 
 /**
  * MERCHANT users only see their own merchant's data; STAFF (operations) see everything

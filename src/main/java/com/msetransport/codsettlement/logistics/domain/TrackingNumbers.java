@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.logistics.domain;
+package com.msetransport.codsettlement.logistics.domain;
 
 import java.util.Locale;
 

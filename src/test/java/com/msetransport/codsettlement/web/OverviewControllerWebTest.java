@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.web;
+package com.msetransport.codsettlement.web;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.benzaazaa.codsettlement.settlement.service.SettlementOverviewService;
-import com.benzaazaa.codsettlement.settlement.web.OverviewController;
-import com.benzaazaa.codsettlement.settlement.web.dto.OverviewResponse;
-import com.benzaazaa.codsettlement.settlement.web.dto.OverviewResponse.CourierPosition;
+import com.msetransport.codsettlement.settlement.service.SettlementOverviewService;
+import com.msetransport.codsettlement.settlement.web.OverviewController;
+import com.msetransport.codsettlement.settlement.web.dto.OverviewResponse;
+import com.msetransport.codsettlement.settlement.web.dto.OverviewResponse.CourierPosition;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import com.benzaazaa.codsettlement.support.WebSliceTestConfig;
+import com.msetransport.codsettlement.support.WebSliceTestConfig;
 
 @WebMvcTest(OverviewController.class)
 @Import(WebSliceTestConfig.class)

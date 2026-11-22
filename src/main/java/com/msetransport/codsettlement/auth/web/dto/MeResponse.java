@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.auth.web.dto;
+package com.msetransport.codsettlement.auth.web.dto;
 
-import com.benzaazaa.codsettlement.account.domain.Role;
-import com.benzaazaa.codsettlement.security.AuthenticatedUser;
+import com.msetransport.codsettlement.account.domain.Role;
+import com.msetransport.codsettlement.security.AuthenticatedUser;
 
 public record MeResponse(Long id, String username, Role role, Long merchantId) {
 

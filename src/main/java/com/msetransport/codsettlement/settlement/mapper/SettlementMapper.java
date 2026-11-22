@@ -1,13 +1,13 @@
-package com.benzaazaa.codsettlement.settlement.mapper;
+package com.msetransport.codsettlement.settlement.mapper;
 
-import com.benzaazaa.codsettlement.settlement.domain.Dispute;
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationResult;
-import com.benzaazaa.codsettlement.settlement.domain.RemittanceLine;
-import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
-import com.benzaazaa.codsettlement.settlement.web.dto.DisputeResponse;
-import com.benzaazaa.codsettlement.settlement.web.dto.ReconciliationResultResponse;
-import com.benzaazaa.codsettlement.settlement.web.dto.RemittanceLineResponse;
-import com.benzaazaa.codsettlement.settlement.web.dto.StatementResponse;
+import com.msetransport.codsettlement.settlement.domain.Dispute;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationResult;
+import com.msetransport.codsettlement.settlement.domain.RemittanceLine;
+import com.msetransport.codsettlement.settlement.domain.RemittanceStatement;
+import com.msetransport.codsettlement.settlement.web.dto.DisputeResponse;
+import com.msetransport.codsettlement.settlement.web.dto.ReconciliationResultResponse;
+import com.msetransport.codsettlement.settlement.web.dto.RemittanceLineResponse;
+import com.msetransport.codsettlement.settlement.web.dto.StatementResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

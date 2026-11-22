@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.settlement.repository;
+package com.msetransport.codsettlement.settlement.repository;
 
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationResult;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationResult;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,7 +29,7 @@ public interface ReconciliationResultRepository extends JpaRepository<Reconcilia
     Optional<ReconciliationResult> findWithStatement(@Param("id") Long id);
 
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.OutcomeTotals(
+            select new com.msetransport.codsettlement.settlement.repository.OutcomeTotals(
                 r.outcome, count(r), sum(r.expectedAmount))
             from ReconciliationResult r
             where r.statement.id = :statementId
@@ -41,17 +41,17 @@ public interface ReconciliationResultRepository extends JpaRepository<Reconcilia
      * ({@code abs}: a short payment and an over-payment both need attention).
      */
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(r), sum(abs(r.difference)))
+            select new com.msetransport.codsettlement.settlement.repository.CountAndSum(count(r), sum(abs(r.difference)))
             from ReconciliationResult r
-            where r.outcome <> com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome.MATCHED
-              and r.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
+            where r.outcome <> com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome.MATCHED
+              and r.statement.status = com.msetransport.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
     CountAndSum discrepancyTotals();
 
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(r), sum(abs(r.difference)))
+            select new com.msetransport.codsettlement.settlement.repository.CountAndSum(count(r), sum(abs(r.difference)))
             from ReconciliationResult r
-            where r.outcome <> com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome.MATCHED
-              and r.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED
+            where r.outcome <> com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome.MATCHED
+              and r.statement.status = com.msetransport.codsettlement.settlement.domain.StatementStatus.RECONCILED
               and r.statement.merchant.id = :merchantId""")
     CountAndSum discrepancyTotals(@Param("merchantId") Long merchantId);
 

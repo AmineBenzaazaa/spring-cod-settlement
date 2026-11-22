@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.auth.web.dto;
+package com.msetransport.codsettlement.auth.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

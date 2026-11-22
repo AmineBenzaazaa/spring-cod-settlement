@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.logistics.repository;
+package com.msetransport.codsettlement.logistics.repository;
 
-import com.benzaazaa.codsettlement.logistics.domain.Order;
+import com.msetransport.codsettlement.logistics.domain.Order;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

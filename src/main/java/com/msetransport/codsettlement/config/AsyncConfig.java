@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.config;
+package com.msetransport.codsettlement.config;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * Background processing of uploaded statements (the role Celery plays in the Django version).
+ * Background processing of uploaded statements.
  *
  * <p>A bounded pool with a bounded queue: when both are full, {@link ThreadPoolExecutor.CallerRunsPolicy}
  * runs the job on the calling thread instead of throwing, which slows uploads down

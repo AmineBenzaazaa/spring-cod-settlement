@@ -1,11 +1,11 @@
-package com.benzaazaa.codsettlement.logistics.mapper;
+package com.msetransport.codsettlement.logistics.mapper;
 
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
-import com.benzaazaa.codsettlement.logistics.domain.DeliveryAttempt;
-import com.benzaazaa.codsettlement.logistics.domain.Order;
-import com.benzaazaa.codsettlement.logistics.web.dto.CourierResponse;
-import com.benzaazaa.codsettlement.logistics.web.dto.DeliveryAttemptResponse;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderResponse;
+import com.msetransport.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.logistics.domain.DeliveryAttempt;
+import com.msetransport.codsettlement.logistics.domain.Order;
+import com.msetransport.codsettlement.logistics.web.dto.CourierResponse;
+import com.msetransport.codsettlement.logistics.web.dto.DeliveryAttemptResponse;
+import com.msetransport.codsettlement.logistics.web.dto.OrderResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

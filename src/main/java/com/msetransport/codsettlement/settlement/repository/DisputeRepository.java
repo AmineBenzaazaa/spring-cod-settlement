@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.repository;
+package com.msetransport.codsettlement.settlement.repository;
 
-import com.benzaazaa.codsettlement.settlement.domain.Dispute;
+import com.msetransport.codsettlement.settlement.domain.Dispute;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,15 +35,15 @@ public interface DisputeRepository extends JpaRepository<Dispute, Long>, JpaSpec
 
     /** Open disputes across all merchants (staff overview): how many, and how much is claimed. */
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(d), sum(d.claimedAmount))
+            select new com.msetransport.codsettlement.settlement.repository.CountAndSum(count(d), sum(d.claimedAmount))
             from Dispute d
-            where d.status = com.benzaazaa.codsettlement.settlement.domain.DisputeStatus.OPEN""")
+            where d.status = com.msetransport.codsettlement.settlement.domain.DisputeStatus.OPEN""")
     CountAndSum openTotals();
 
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.CountAndSum(count(d), sum(d.claimedAmount))
+            select new com.msetransport.codsettlement.settlement.repository.CountAndSum(count(d), sum(d.claimedAmount))
             from Dispute d
-            where d.status = com.benzaazaa.codsettlement.settlement.domain.DisputeStatus.OPEN
+            where d.status = com.msetransport.codsettlement.settlement.domain.DisputeStatus.OPEN
               and d.merchant.id = :merchantId""")
     CountAndSum openTotals(@Param("merchantId") Long merchantId);
 

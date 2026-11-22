@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
-import com.benzaazaa.codsettlement.account.domain.Role;
+import com.msetransport.codsettlement.account.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

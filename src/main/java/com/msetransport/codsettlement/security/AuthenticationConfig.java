@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

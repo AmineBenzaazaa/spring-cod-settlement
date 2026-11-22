@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.account.domain;
+package com.msetransport.codsettlement.account.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

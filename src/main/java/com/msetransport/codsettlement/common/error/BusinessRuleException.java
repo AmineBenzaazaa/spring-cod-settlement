@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.error;
+package com.msetransport.codsettlement.common.error;
 
 /**
  * A well-formed request that breaks a domain rule, e.g. "a delivered order cannot be

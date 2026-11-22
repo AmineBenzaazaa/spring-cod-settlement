@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.it;
+package com.msetransport.codsettlement.it;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -6,9 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.benzaazaa.codsettlement.demo.DemoDataSeeder;
-import com.benzaazaa.codsettlement.settlement.domain.StatementStatus;
-import com.benzaazaa.codsettlement.support.AbstractIntegrationTest;
+import com.msetransport.codsettlement.demo.DemoDataSeeder;
+import com.msetransport.codsettlement.settlement.domain.StatementStatus;
+import com.msetransport.codsettlement.support.AbstractIntegrationTest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.logistics.domain;
+package com.msetransport.codsettlement.logistics.domain;
 
 /** What happened at the door, and which order status it leads to. */
 public enum AttemptOutcome {

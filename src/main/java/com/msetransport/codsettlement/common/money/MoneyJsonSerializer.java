@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.money;
+package com.msetransport.codsettlement.common.money;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

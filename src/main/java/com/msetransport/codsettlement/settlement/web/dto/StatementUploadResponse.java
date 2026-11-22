@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
 /**
  * @param duplicate {@code true} when byte-identical content was already uploaded by this

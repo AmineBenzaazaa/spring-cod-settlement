@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.web;
+package com.msetransport.codsettlement.common.web;
 
 import java.util.List;
 import org.springframework.data.domain.Page;

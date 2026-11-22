@@ -1,8 +1,8 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import com.benzaazaa.codsettlement.common.money.InvalidAmountException;
-import com.benzaazaa.codsettlement.common.money.Money;
-import com.benzaazaa.codsettlement.logistics.domain.TrackingNumbers;
+import com.msetransport.codsettlement.common.money.InvalidAmountException;
+import com.msetransport.codsettlement.common.money.Money;
+import com.msetransport.codsettlement.logistics.domain.TrackingNumbers;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UncheckedIOException;

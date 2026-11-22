@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import com.benzaazaa.codsettlement.settlement.domain.Dispute;
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationResult;
+import com.msetransport.codsettlement.settlement.domain.Dispute;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationResult;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;

@@ -1,13 +1,13 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.benzaazaa.codsettlement.account.domain.Merchant;
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
-import com.benzaazaa.codsettlement.settlement.domain.Dispute;
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
-import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.account.domain.Merchant;
+import com.msetransport.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.settlement.domain.Dispute;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.msetransport.codsettlement.settlement.domain.RemittanceStatement;
+import com.msetransport.codsettlement.support.TestData;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

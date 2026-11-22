@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.money;
+package com.msetransport.codsettlement.common.money;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

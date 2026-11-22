@@ -1,8 +1,8 @@
-package com.benzaazaa.codsettlement.logistics.domain;
+package com.msetransport.codsettlement.logistics.domain;
 
-import com.benzaazaa.codsettlement.account.domain.Merchant;
-import com.benzaazaa.codsettlement.common.error.BusinessRuleException;
-import com.benzaazaa.codsettlement.common.money.Money;
+import com.msetransport.codsettlement.account.domain.Merchant;
+import com.msetransport.codsettlement.common.error.BusinessRuleException;
+import com.msetransport.codsettlement.common.money.Money;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,9 +1,9 @@
-package com.benzaazaa.codsettlement.support;
+package com.msetransport.codsettlement.support;
 
-import com.benzaazaa.codsettlement.config.ClockConfig;
-import com.benzaazaa.codsettlement.security.JwtService;
-import com.benzaazaa.codsettlement.security.ProblemDetailSecurityHandler;
-import com.benzaazaa.codsettlement.security.SecurityConfig;
+import com.msetransport.codsettlement.config.ClockConfig;
+import com.msetransport.codsettlement.security.JwtService;
+import com.msetransport.codsettlement.security.ProblemDetailSecurityHandler;
+import com.msetransport.codsettlement.security.SecurityConfig;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 

@@ -1,12 +1,12 @@
-package com.benzaazaa.codsettlement.logistics.domain;
+package com.msetransport.codsettlement.logistics.domain;
 
-import static com.benzaazaa.codsettlement.support.TestData.courier;
-import static com.benzaazaa.codsettlement.support.TestData.merchant;
+import static com.msetransport.codsettlement.support.TestData.courier;
+import static com.msetransport.codsettlement.support.TestData.merchant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.benzaazaa.codsettlement.common.error.BusinessRuleException;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.common.error.BusinessRuleException;
+import com.msetransport.codsettlement.support.TestData;
 import java.math.BigDecimal;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;

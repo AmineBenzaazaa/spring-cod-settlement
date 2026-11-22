@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.account.repository;
+package com.msetransport.codsettlement.account.repository;
 
-import com.benzaazaa.codsettlement.account.domain.AppUser;
+import com.msetransport.codsettlement.account.domain.AppUser;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

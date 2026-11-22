@@ -1,8 +1,8 @@
-package com.benzaazaa.codsettlement.settlement.web;
+package com.msetransport.codsettlement.settlement.web;
 
-import com.benzaazaa.codsettlement.security.AuthenticatedUser;
-import com.benzaazaa.codsettlement.settlement.service.CourierBalanceService;
-import com.benzaazaa.codsettlement.settlement.web.dto.CourierBalanceResponse;
+import com.msetransport.codsettlement.security.AuthenticatedUser;
+import com.msetransport.codsettlement.settlement.service.CourierBalanceService;
+import com.msetransport.codsettlement.settlement.web.dto.CourierBalanceResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;

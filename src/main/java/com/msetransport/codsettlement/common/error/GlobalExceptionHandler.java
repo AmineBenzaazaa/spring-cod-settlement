@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.error;
+package com.msetransport.codsettlement.common.error;
 
 import java.net.URI;
 import java.util.LinkedHashMap;
@@ -35,7 +35,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    private static final String TYPE_PREFIX = "https://cod-settlement.benzaazaa.com/problems/";
+    private static final String TYPE_PREFIX = "https://settle.msetransport.com/problems/";
 
     @ExceptionHandler(ResourceNotFoundException.class)
     ProblemDetail handleNotFound(ResourceNotFoundException ex) {

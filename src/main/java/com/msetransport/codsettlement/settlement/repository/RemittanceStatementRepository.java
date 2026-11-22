@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.repository;
+package com.msetransport.codsettlement.settlement.repository;
 
-import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
+import com.msetransport.codsettlement.settlement.domain.RemittanceStatement;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

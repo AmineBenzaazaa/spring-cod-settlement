@@ -1,15 +1,15 @@
-package com.benzaazaa.codsettlement.demo;
+package com.msetransport.codsettlement.demo;
 
-import com.benzaazaa.codsettlement.account.domain.AppUser;
-import com.benzaazaa.codsettlement.account.domain.Merchant;
-import com.benzaazaa.codsettlement.account.repository.AppUserRepository;
-import com.benzaazaa.codsettlement.account.repository.MerchantRepository;
-import com.benzaazaa.codsettlement.logistics.domain.AttemptOutcome;
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
-import com.benzaazaa.codsettlement.logistics.domain.Order;
-import com.benzaazaa.codsettlement.logistics.domain.OrderStatus;
-import com.benzaazaa.codsettlement.logistics.repository.CourierRepository;
-import com.benzaazaa.codsettlement.logistics.repository.OrderRepository;
+import com.msetransport.codsettlement.account.domain.AppUser;
+import com.msetransport.codsettlement.account.domain.Merchant;
+import com.msetransport.codsettlement.account.repository.AppUserRepository;
+import com.msetransport.codsettlement.account.repository.MerchantRepository;
+import com.msetransport.codsettlement.logistics.domain.AttemptOutcome;
+import com.msetransport.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.logistics.domain.Order;
+import com.msetransport.codsettlement.logistics.domain.OrderStatus;
+import com.msetransport.codsettlement.logistics.repository.CourierRepository;
+import com.msetransport.codsettlement.logistics.repository.OrderRepository;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;

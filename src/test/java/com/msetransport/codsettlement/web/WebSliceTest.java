@@ -1,8 +1,8 @@
-package com.benzaazaa.codsettlement.web;
+package com.msetransport.codsettlement.web;
 
-import com.benzaazaa.codsettlement.security.AuthenticatedUser;
-import com.benzaazaa.codsettlement.security.JwtService;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.security.AuthenticatedUser;
+import com.msetransport.codsettlement.security.JwtService;
+import com.msetransport.codsettlement.support.TestData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 

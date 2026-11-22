@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.support;
+package com.msetransport.codsettlement.support;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

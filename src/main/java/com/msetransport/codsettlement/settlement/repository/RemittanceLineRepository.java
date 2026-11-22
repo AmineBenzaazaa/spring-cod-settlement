@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.repository;
+package com.msetransport.codsettlement.settlement.repository;
 
-import com.benzaazaa.codsettlement.settlement.domain.RemittanceLine;
+import com.msetransport.codsettlement.settlement.domain.RemittanceLine;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +12,7 @@ public interface RemittanceLineRepository extends JpaRepository<RemittanceLine, 
     List<RemittanceLine> findByStatementIdOrderByRowNumber(Long statementId);
 
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.MoneyTotals(
+            select new com.msetransport.codsettlement.settlement.repository.MoneyTotals(
                 sum(l.amountCollected), sum(l.fee))
             from RemittanceLine l
             where l.statement.id = :statementId""")
@@ -23,20 +23,20 @@ public interface RemittanceLineRepository extends JpaRepository<RemittanceLine, 
      * {@code l.order} excludes unknown-tracking lines (they belong to no order of ours).
      */
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.MoneyTotals(
+            select new com.msetransport.codsettlement.settlement.repository.MoneyTotals(
                 sum(l.amountCollected), sum(l.fee))
             from RemittanceLine l
             where l.order.courier.id = :courierId
-              and l.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
+              and l.statement.status = com.msetransport.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
     MoneyTotals reportedTotals(@Param("courierId") Long courierId);
 
     @Query("""
-            select new com.benzaazaa.codsettlement.settlement.repository.MoneyTotals(
+            select new com.msetransport.codsettlement.settlement.repository.MoneyTotals(
                 sum(l.amountCollected), sum(l.fee))
             from RemittanceLine l
             where l.order.courier.id = :courierId
               and l.statement.merchant.id = :merchantId
-              and l.statement.status = com.benzaazaa.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
+              and l.statement.status = com.msetransport.codsettlement.settlement.domain.StatementStatus.RECONCILED""")
     MoneyTotals reportedTotals(@Param("courierId") Long courierId, @Param("merchantId") Long merchantId);
 
     /**

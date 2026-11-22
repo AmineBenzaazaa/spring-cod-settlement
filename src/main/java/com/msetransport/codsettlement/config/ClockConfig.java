@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.config;
+package com.msetransport.codsettlement.config;
 
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;

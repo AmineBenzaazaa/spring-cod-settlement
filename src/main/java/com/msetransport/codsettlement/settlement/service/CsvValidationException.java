@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import com.benzaazaa.codsettlement.common.error.InvalidRequestException;
+import com.msetransport.codsettlement.common.error.InvalidRequestException;
 import java.util.List;
 
 /** The uploaded file is rejected as a whole; {@code getMessages()} lists every problem found. */

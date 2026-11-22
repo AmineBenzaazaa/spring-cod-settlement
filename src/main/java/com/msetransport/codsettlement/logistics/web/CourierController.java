@@ -1,10 +1,10 @@
-package com.benzaazaa.codsettlement.logistics.web;
+package com.msetransport.codsettlement.logistics.web;
 
-import com.benzaazaa.codsettlement.common.web.PageResponse;
-import com.benzaazaa.codsettlement.common.web.SortGuard;
-import com.benzaazaa.codsettlement.logistics.service.CourierService;
-import com.benzaazaa.codsettlement.logistics.web.dto.CourierRequest;
-import com.benzaazaa.codsettlement.logistics.web.dto.CourierResponse;
+import com.msetransport.codsettlement.common.web.PageResponse;
+import com.msetransport.codsettlement.common.web.SortGuard;
+import com.msetransport.codsettlement.logistics.service.CourierService;
+import com.msetransport.codsettlement.logistics.web.dto.CourierRequest;
+import com.msetransport.codsettlement.logistics.web.dto.CourierResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Set;

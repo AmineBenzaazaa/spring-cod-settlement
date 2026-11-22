@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.web;
+package com.msetransport.codsettlement.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -14,17 +14,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.benzaazaa.codsettlement.common.error.BusinessRuleException;
-import com.benzaazaa.codsettlement.common.error.ConflictException;
-import com.benzaazaa.codsettlement.common.error.ResourceNotFoundException;
-import com.benzaazaa.codsettlement.common.web.PageResponse;
-import com.benzaazaa.codsettlement.logistics.domain.OrderStatus;
-import com.benzaazaa.codsettlement.logistics.service.OrderService;
-import com.benzaazaa.codsettlement.logistics.web.OrderController;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderFilter;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderResponse;
-import com.benzaazaa.codsettlement.support.TestData;
-import com.benzaazaa.codsettlement.support.WebSliceTestConfig;
+import com.msetransport.codsettlement.common.error.BusinessRuleException;
+import com.msetransport.codsettlement.common.error.ConflictException;
+import com.msetransport.codsettlement.common.error.ResourceNotFoundException;
+import com.msetransport.codsettlement.common.web.PageResponse;
+import com.msetransport.codsettlement.logistics.domain.OrderStatus;
+import com.msetransport.codsettlement.logistics.service.OrderService;
+import com.msetransport.codsettlement.logistics.web.OrderController;
+import com.msetransport.codsettlement.logistics.web.dto.OrderFilter;
+import com.msetransport.codsettlement.logistics.web.dto.OrderResponse;
+import com.msetransport.codsettlement.support.TestData;
+import com.msetransport.codsettlement.support.WebSliceTestConfig;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -122,7 +122,7 @@ class OrderControllerWebTest extends WebSliceTest {
 
         mvc.perform(get("/api/orders/1").header(HttpHeaders.AUTHORIZATION, merchantToken()))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.type").value("https://cod-settlement.benzaazaa.com/problems/not-found"));
+                .andExpect(jsonPath("$.type").value("https://settle.msetransport.com/problems/not-found"));
         mvc.perform(post("/api/orders/2/cancel").header(HttpHeaders.AUTHORIZATION, merchantToken()))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.detail").value("Cannot cancel a DELIVERED order."));

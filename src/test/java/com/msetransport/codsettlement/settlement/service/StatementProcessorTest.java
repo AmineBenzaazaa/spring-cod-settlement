@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import static com.benzaazaa.codsettlement.support.TestData.courier;
-import static com.benzaazaa.codsettlement.support.TestData.merchant;
+import static com.msetransport.codsettlement.support.TestData.courier;
+import static com.msetransport.codsettlement.support.TestData.merchant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -11,13 +11,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.benzaazaa.codsettlement.common.error.ConflictException;
-import com.benzaazaa.codsettlement.settlement.domain.RemittanceStatement;
-import com.benzaazaa.codsettlement.settlement.domain.StatementFile;
-import com.benzaazaa.codsettlement.settlement.domain.StatementStatus;
-import com.benzaazaa.codsettlement.settlement.repository.RemittanceStatementRepository;
-import com.benzaazaa.codsettlement.settlement.repository.StatementFileRepository;
-import com.benzaazaa.codsettlement.support.TestData;
+import com.msetransport.codsettlement.common.error.ConflictException;
+import com.msetransport.codsettlement.settlement.domain.RemittanceStatement;
+import com.msetransport.codsettlement.settlement.domain.StatementFile;
+import com.msetransport.codsettlement.settlement.domain.StatementStatus;
+import com.msetransport.codsettlement.settlement.repository.RemittanceStatementRepository;
+import com.msetransport.codsettlement.settlement.repository.StatementFileRepository;
+import com.msetransport.codsettlement.support.TestData;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;

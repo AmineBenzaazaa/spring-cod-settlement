@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
-import com.benzaazaa.codsettlement.settlement.web.validation.HasPeriod;
-import com.benzaazaa.codsettlement.settlement.web.validation.ValidPeriod;
+import com.msetransport.codsettlement.settlement.web.validation.HasPeriod;
+import com.msetransport.codsettlement.settlement.web.validation.ValidPeriod;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;

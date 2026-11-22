@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.web;
+package com.msetransport.codsettlement.web;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -9,11 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.benzaazaa.codsettlement.auth.service.AuthService;
-import com.benzaazaa.codsettlement.auth.web.AuthController;
-import com.benzaazaa.codsettlement.auth.web.dto.TokenResponse;
-import com.benzaazaa.codsettlement.support.TestData;
-import com.benzaazaa.codsettlement.support.WebSliceTestConfig;
+import com.msetransport.codsettlement.auth.service.AuthService;
+import com.msetransport.codsettlement.auth.web.AuthController;
+import com.msetransport.codsettlement.auth.web.dto.TokenResponse;
+import com.msetransport.codsettlement.support.TestData;
+import com.msetransport.codsettlement.support.WebSliceTestConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;

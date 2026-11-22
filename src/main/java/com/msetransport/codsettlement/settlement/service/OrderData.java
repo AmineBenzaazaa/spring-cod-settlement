@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import com.benzaazaa.codsettlement.common.money.Money;
-import com.benzaazaa.codsettlement.logistics.domain.OrderStatus;
+import com.msetransport.codsettlement.common.money.Money;
+import com.msetransport.codsettlement.logistics.domain.OrderStatus;
 import java.math.BigDecimal;
 
 public record OrderData(Long orderId, String trackingNumber, BigDecimal amountDue, OrderStatus status) {

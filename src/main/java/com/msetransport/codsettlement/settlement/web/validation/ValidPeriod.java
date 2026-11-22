@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.web.validation;
+package com.msetransport.codsettlement.settlement.web.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

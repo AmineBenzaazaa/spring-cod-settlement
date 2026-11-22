@@ -1,11 +1,11 @@
-package com.benzaazaa.codsettlement.auth.web;
+package com.msetransport.codsettlement.auth.web;
 
-import com.benzaazaa.codsettlement.auth.service.AuthService;
-import com.benzaazaa.codsettlement.auth.web.dto.LoginRequest;
-import com.benzaazaa.codsettlement.auth.web.dto.MeResponse;
-import com.benzaazaa.codsettlement.auth.web.dto.RefreshRequest;
-import com.benzaazaa.codsettlement.auth.web.dto.TokenResponse;
-import com.benzaazaa.codsettlement.security.AuthenticatedUser;
+import com.msetransport.codsettlement.auth.service.AuthService;
+import com.msetransport.codsettlement.auth.web.dto.LoginRequest;
+import com.msetransport.codsettlement.auth.web.dto.MeResponse;
+import com.msetransport.codsettlement.auth.web.dto.RefreshRequest;
+import com.msetransport.codsettlement.auth.web.dto.TokenResponse;
+import com.msetransport.codsettlement.security.AuthenticatedUser;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

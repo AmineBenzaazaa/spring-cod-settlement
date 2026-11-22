@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.domain;
+package com.msetransport.codsettlement.settlement.domain;
 
 public enum ReconciliationOutcome {
     /** Courier reported exactly the cash we expected. */

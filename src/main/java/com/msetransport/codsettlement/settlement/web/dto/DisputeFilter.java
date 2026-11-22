@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
-import com.benzaazaa.codsettlement.settlement.domain.DisputeStatus;
+import com.msetransport.codsettlement.settlement.domain.DisputeStatus;
 
 public record DisputeFilter(DisputeStatus status, Long courierId, Long statementId, Long merchantId) {
 

@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.common.web;
+package com.msetransport.codsettlement.common.web;
 
-import com.benzaazaa.codsettlement.common.error.InvalidRequestException;
+import com.msetransport.codsettlement.common.error.InvalidRequestException;
 import java.util.Set;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

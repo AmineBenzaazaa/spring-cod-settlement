@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
-import com.benzaazaa.codsettlement.account.repository.AppUserRepository;
+import com.msetransport.codsettlement.account.repository.AppUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

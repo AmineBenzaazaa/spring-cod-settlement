@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
-import com.benzaazaa.codsettlement.account.domain.AppUser;
+import com.msetransport.codsettlement.account.domain.AppUser;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

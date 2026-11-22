@@ -1,9 +1,9 @@
-package com.benzaazaa.codsettlement.settlement.domain;
+package com.msetransport.codsettlement.settlement.domain;
 
-import com.benzaazaa.codsettlement.account.domain.AppUser;
-import com.benzaazaa.codsettlement.account.domain.Merchant;
-import com.benzaazaa.codsettlement.common.money.Money;
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.account.domain.AppUser;
+import com.msetransport.codsettlement.account.domain.Merchant;
+import com.msetransport.codsettlement.common.money.Money;
+import com.msetransport.codsettlement.logistics.domain.Courier;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

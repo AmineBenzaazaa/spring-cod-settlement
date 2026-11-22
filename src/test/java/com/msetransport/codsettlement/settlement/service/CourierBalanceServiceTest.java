@@ -1,20 +1,20 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import static com.benzaazaa.codsettlement.support.TestData.merchantUser;
-import static com.benzaazaa.codsettlement.support.TestData.staff;
+import static com.msetransport.codsettlement.support.TestData.merchantUser;
+import static com.msetransport.codsettlement.support.TestData.staff;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-import com.benzaazaa.codsettlement.account.repository.MerchantRepository;
-import com.benzaazaa.codsettlement.common.error.InvalidRequestException;
-import com.benzaazaa.codsettlement.common.error.ResourceNotFoundException;
-import com.benzaazaa.codsettlement.logistics.repository.CourierRepository;
-import com.benzaazaa.codsettlement.settlement.repository.CountAndSum;
-import com.benzaazaa.codsettlement.settlement.repository.MoneyTotals;
-import com.benzaazaa.codsettlement.settlement.repository.RemittanceLineRepository;
-import com.benzaazaa.codsettlement.settlement.repository.SettlementOrderRepository;
-import com.benzaazaa.codsettlement.settlement.web.dto.CourierBalanceResponse;
+import com.msetransport.codsettlement.account.repository.MerchantRepository;
+import com.msetransport.codsettlement.common.error.InvalidRequestException;
+import com.msetransport.codsettlement.common.error.ResourceNotFoundException;
+import com.msetransport.codsettlement.logistics.repository.CourierRepository;
+import com.msetransport.codsettlement.settlement.repository.CountAndSum;
+import com.msetransport.codsettlement.settlement.repository.MoneyTotals;
+import com.msetransport.codsettlement.settlement.repository.RemittanceLineRepository;
+import com.msetransport.codsettlement.settlement.repository.SettlementOrderRepository;
+import com.msetransport.codsettlement.settlement.web.dto.CourierBalanceResponse;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

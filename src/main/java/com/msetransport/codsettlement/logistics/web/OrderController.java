@@ -1,14 +1,14 @@
-package com.benzaazaa.codsettlement.logistics.web;
+package com.msetransport.codsettlement.logistics.web;
 
-import com.benzaazaa.codsettlement.common.web.PageResponse;
-import com.benzaazaa.codsettlement.common.web.SortGuard;
-import com.benzaazaa.codsettlement.logistics.service.OrderService;
-import com.benzaazaa.codsettlement.logistics.web.dto.DeliveryAttemptRequest;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderCreateRequest;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderFilter;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderResponse;
-import com.benzaazaa.codsettlement.logistics.web.dto.OrderUpdateRequest;
-import com.benzaazaa.codsettlement.security.AuthenticatedUser;
+import com.msetransport.codsettlement.common.web.PageResponse;
+import com.msetransport.codsettlement.common.web.SortGuard;
+import com.msetransport.codsettlement.logistics.service.OrderService;
+import com.msetransport.codsettlement.logistics.web.dto.DeliveryAttemptRequest;
+import com.msetransport.codsettlement.logistics.web.dto.OrderCreateRequest;
+import com.msetransport.codsettlement.logistics.web.dto.OrderFilter;
+import com.msetransport.codsettlement.logistics.web.dto.OrderResponse;
+import com.msetransport.codsettlement.logistics.web.dto.OrderUpdateRequest;
+import com.msetransport.codsettlement.security.AuthenticatedUser;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Set;

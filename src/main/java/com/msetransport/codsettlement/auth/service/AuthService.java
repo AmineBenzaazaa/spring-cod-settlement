@@ -1,13 +1,13 @@
-package com.benzaazaa.codsettlement.auth.service;
+package com.msetransport.codsettlement.auth.service;
 
-import com.benzaazaa.codsettlement.account.domain.AppUser;
-import com.benzaazaa.codsettlement.account.repository.AppUserRepository;
-import com.benzaazaa.codsettlement.auth.web.dto.LoginRequest;
-import com.benzaazaa.codsettlement.auth.web.dto.TokenResponse;
-import com.benzaazaa.codsettlement.security.AuthenticatedUser;
-import com.benzaazaa.codsettlement.security.InvalidTokenException;
-import com.benzaazaa.codsettlement.security.JwtService;
-import com.benzaazaa.codsettlement.security.SecurityUser;
+import com.msetransport.codsettlement.account.domain.AppUser;
+import com.msetransport.codsettlement.account.repository.AppUserRepository;
+import com.msetransport.codsettlement.auth.web.dto.LoginRequest;
+import com.msetransport.codsettlement.auth.web.dto.TokenResponse;
+import com.msetransport.codsettlement.security.AuthenticatedUser;
+import com.msetransport.codsettlement.security.InvalidTokenException;
+import com.msetransport.codsettlement.security.JwtService;
+import com.msetransport.codsettlement.security.SecurityUser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

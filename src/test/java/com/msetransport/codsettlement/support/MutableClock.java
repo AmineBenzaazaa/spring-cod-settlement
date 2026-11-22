@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.support;
+package com.msetransport.codsettlement.support;
 
 import java.time.Clock;
 import java.time.Duration;

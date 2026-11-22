@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.auth.web.dto;
+package com.msetransport.codsettlement.auth.web.dto;
 
 /** OAuth2-style token response. {@code expiresIn} is the access token lifetime in seconds. */
 public record TokenResponse(String accessToken, String refreshToken, String tokenType, long expiresIn) {

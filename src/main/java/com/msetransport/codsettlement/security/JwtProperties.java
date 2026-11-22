@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

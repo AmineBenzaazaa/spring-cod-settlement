@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.common.money;
+package com.msetransport.codsettlement.common.money;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

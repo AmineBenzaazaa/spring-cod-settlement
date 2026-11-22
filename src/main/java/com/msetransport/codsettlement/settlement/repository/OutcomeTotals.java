@@ -1,6 +1,6 @@
-package com.benzaazaa.codsettlement.settlement.repository;
+package com.msetransport.codsettlement.settlement.repository;
 
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome;
 import java.math.BigDecimal;
 
 /** Row of a GROUP BY outcome query (JPQL constructor expression into a record). */

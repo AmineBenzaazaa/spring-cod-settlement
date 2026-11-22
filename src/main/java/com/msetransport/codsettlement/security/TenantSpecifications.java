@@ -1,4 +1,4 @@
-package com.benzaazaa.codsettlement.security;
+package com.msetransport.codsettlement.security;
 
 import jakarta.persistence.criteria.Path;
 import org.springframework.data.jpa.domain.Specification;

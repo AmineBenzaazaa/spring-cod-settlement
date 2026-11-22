@@ -1,9 +1,9 @@
-package com.benzaazaa.codsettlement.settlement.service;
+package com.msetransport.codsettlement.settlement.service;
 
-import com.benzaazaa.codsettlement.common.error.ConflictException;
-import com.benzaazaa.codsettlement.settlement.domain.StatementStatus;
-import com.benzaazaa.codsettlement.settlement.repository.RemittanceStatementRepository;
-import com.benzaazaa.codsettlement.settlement.repository.StatementFileRepository;
+import com.msetransport.codsettlement.common.error.ConflictException;
+import com.msetransport.codsettlement.settlement.domain.StatementStatus;
+import com.msetransport.codsettlement.settlement.repository.RemittanceStatementRepository;
+import com.msetransport.codsettlement.settlement.repository.StatementFileRepository;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

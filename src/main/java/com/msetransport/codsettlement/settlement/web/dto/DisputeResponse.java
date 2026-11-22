@@ -1,7 +1,7 @@
-package com.benzaazaa.codsettlement.settlement.web.dto;
+package com.msetransport.codsettlement.settlement.web.dto;
 
-import com.benzaazaa.codsettlement.settlement.domain.DisputeStatus;
-import com.benzaazaa.codsettlement.settlement.domain.ReconciliationOutcome;
+import com.msetransport.codsettlement.settlement.domain.DisputeStatus;
+import com.msetransport.codsettlement.settlement.domain.ReconciliationOutcome;
 import java.math.BigDecimal;
 import java.time.Instant;
 

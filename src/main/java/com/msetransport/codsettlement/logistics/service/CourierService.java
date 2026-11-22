@@ -1,14 +1,14 @@
-package com.benzaazaa.codsettlement.logistics.service;
+package com.msetransport.codsettlement.logistics.service;
 
-import com.benzaazaa.codsettlement.common.error.ConflictException;
-import com.benzaazaa.codsettlement.common.error.ResourceNotFoundException;
-import com.benzaazaa.codsettlement.common.web.PageResponse;
-import com.benzaazaa.codsettlement.logistics.domain.Courier;
-import com.benzaazaa.codsettlement.logistics.mapper.LogisticsMapper;
-import com.benzaazaa.codsettlement.logistics.repository.CourierRepository;
-import com.benzaazaa.codsettlement.logistics.repository.OrderRepository;
-import com.benzaazaa.codsettlement.logistics.web.dto.CourierRequest;
-import com.benzaazaa.codsettlement.logistics.web.dto.CourierResponse;
+import com.msetransport.codsettlement.common.error.ConflictException;
+import com.msetransport.codsettlement.common.error.ResourceNotFoundException;
+import com.msetransport.codsettlement.common.web.PageResponse;
+import com.msetransport.codsettlement.logistics.domain.Courier;
+import com.msetransport.codsettlement.logistics.mapper.LogisticsMapper;
+import com.msetransport.codsettlement.logistics.repository.CourierRepository;
+import com.msetransport.codsettlement.logistics.repository.OrderRepository;
+import com.msetransport.codsettlement.logistics.web.dto.CourierRequest;
+import com.msetransport.codsettlement.logistics.web.dto.CourierResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
