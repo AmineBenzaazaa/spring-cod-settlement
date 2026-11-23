@@ -149,6 +149,8 @@ export interface UploadInput {
 }
 
 export const api = {
+  /** The signed-in user, with the merchant's display name for the header. */
+  me: () => request<{ username: string; merchantName: string | null }>('/api/auth/me'),
   async login(username: string, password: string): Promise<TokenResponse> {
     const res = await fetch('/api/auth/login', {
       method: 'POST',

@@ -34,6 +34,13 @@ describe('AppShell', () => {
     renderWithProviders(app, { path: '/disputes' });
     expect(screen.getByTestId('user-chip')).toHaveTextContent('ops');
     await userEvent.click(screen.getByTestId('user-menu'));
+    await userEvent.click(screen.getByTestId('how-it-works-open'));
+    const dialog = await screen.findByTestId('how-it-works');
+    expect(dialog).toHaveTextContent('How MSE Transport works');
+    expect(dialog.querySelectorAll('li')).toHaveLength(6);
+    await userEvent.keyboard('{Escape}');
+
+    await userEvent.click(screen.getByTestId('user-menu'));
     await userEvent.click(screen.getByTestId('logout'));
     expect(sessionStore.get()).toBeNull();
   });

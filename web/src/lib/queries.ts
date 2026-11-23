@@ -4,6 +4,7 @@ import { api, type DisputeQuery, type OrderQuery, type UploadInput } from './api
 import type { DisputeDecision, Statement, StatementStatus } from './types';
 
 export const keys = {
+  me: ['me'] as const,
   overview: ['overview'] as const,
   couriers: ['couriers'] as const,
   courierPage: (q: string, page: number) => ['couriers', 'page', q, page] as const,
@@ -14,6 +15,11 @@ export const keys = {
   disputes: (query: DisputeQuery) => ['disputes', query] as const,
   dispute: (id: number) => ['dispute', id] as const,
 };
+
+/** Display name of the signed-in merchant (Atlas Home); null for finance staff. */
+export function useMe(enabled = true) {
+  return useQuery({ queryKey: keys.me, queryFn: api.me, enabled, staleTime: Infinity, retry: false });
+}
 
 /** Statements are processed asynchronously after the upload: keep polling while one is in flight. */
 export const POLL_MS = 1_000;

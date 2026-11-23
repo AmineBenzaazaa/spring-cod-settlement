@@ -12,13 +12,14 @@ import { CopyButton } from '@/components/ui/CopyButton';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Money } from '@/components/ui/Money';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { Term } from '@/components/ui/Term';
 import { Skeleton } from '@/components/ui/Skeleton';
 
-function Stat({ label, children, testId }: { label: string; children: React.ReactNode; testId?: string }) {
+function Stat({ label, children, testId }: { label: React.ReactNode; children: React.ReactNode; testId?: string }) {
   return (
     <div className="min-w-0 px-4 py-3" data-testid={testId}>
       <p className="label">{label}</p>
-      <p className="mt-1 truncate text-[17px] font-semibold tracking-tight">{children}</p>
+      <p className="mt-1 truncate text-[17px] font-semibold tracking-tight tabular-nums">{children}</p>
     </div>
   );
 }
@@ -53,17 +54,20 @@ export function StatementDetailPage() {
             <span className="font-mono">{s.originalFilename}</span><span className="text-faint">·</span>
             <span>{courier?.name ?? `#${s.courierId}`}</span><span className="text-faint">·</span>
             <span>{formatPeriod(s.periodStart, s.periodEnd, lang)}</span><span className="text-faint">·</span>
-            <span title={formatDateTime(s.uploadedAt, lang)}>{s.lineCount} lines</span>
+            <span title={formatDateTime(s.uploadedAt, lang)}>{t('recon.lines', { n: s.lineCount })}</span>
             <span className="inline-flex items-center gap-1 rounded bg-subtle px-1.5 py-0.5 font-mono text-[11px] text-muted" title={s.fileSha256}>
               {t('recon.sha')} {s.fileSha256.slice(0, 10)}…<CopyButton value={s.fileSha256} />
             </span>
           </span>
         ) : <Skeleton className="h-4 w-80" />}
       />
+      <p className="-mt-2 text-[13px] text-muted" data-testid="recon-explain">
+        <Term k="reconciliation">{t('recon.explainTitle')}</Term>{' '}{t('recon.explain')}
+      </p>
 
       {s && isPending(s.status) && (
         <div className="panel flex items-center gap-3 p-5" data-testid="processing">
-          <Loader2 className="h-5 w-5 animate-spin text-sky-500" />
+          <Loader2 className="h-5 w-5 animate-spin text-accent" />
           <div>
             <p className="text-[14px] font-medium">{t('recon.processing')}</p>
             <p className="text-[12.5px] text-muted">{t('recon.processingHint')}</p>
@@ -72,8 +76,8 @@ export function StatementDetailPage() {
       )}
 
       {s?.status === 'FAILED' && (
-        <div role="alert" className="panel flex items-start gap-3 border-rose-500/30 p-5">
-          <XCircle className="mt-0.5 h-5 w-5 text-rose-500" />
+        <div role="alert" className="panel flex items-start gap-3 border-danger/30 p-5">
+          <XCircle className="mt-0.5 h-5 w-5 text-danger" />
           <div>
             <p className="text-[14px] font-medium">{t('recon.failed')}</p>
             <p className="text-[12.5px] text-muted">{s.errorMessage}</p>
@@ -90,11 +94,11 @@ export function StatementDetailPage() {
       {report.data?.summary && (
         <>
           <div className="panel grid grid-cols-2 divide-line sm:grid-cols-5 sm:divide-x" data-testid="recon-summary">
-            <Stat label={t('recon.expected')}><Money value={report.data.summary.expectedTotal} /></Stat>
+            <Stat label={<Term k="expected">{t('recon.expected')}</Term>}><Money value={report.data.summary.expectedTotal} /></Stat>
             <Stat label={t('recon.collected')}><Money value={report.data.summary.collectedTotal} /></Stat>
             <Stat label={t('recon.fees')}><Money value={report.data.summary.feesTotal} muted /></Stat>
-            <Stat label={t('recon.net')}><Money value={report.data.summary.netRemitted} /></Stat>
-            <Stat label={t('recon.difference')} testId="summary-difference"><Money value={report.data.summary.differenceTotal} diff /></Stat>
+            <Stat label={<Term k="netRemitted">{t('recon.net')}</Term>}><Money value={report.data.summary.netRemitted} /></Stat>
+            <Stat label={<Term k="discrepancy">{t('recon.difference')}</Term>} testId="summary-difference"><Money value={report.data.summary.differenceTotal} diff /></Stat>
           </div>
           <ReconciliationTable results={report.data.results} summary={report.data.summary} onOpenDispute={setDisputing} />
         </>

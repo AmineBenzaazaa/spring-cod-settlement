@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
-import { FileSpreadsheet, Gavel, LayoutDashboard, Languages, LogOut, Moon, Package, Sun, Truck } from 'lucide-react';
+import { CircleHelp, FileSpreadsheet, Gavel, LayoutDashboard, Languages, LogOut, Moon, Package, Sun, Truck } from 'lucide-react';
+import { useMe } from '@/lib/queries';
+import { HowItWorks } from './HowItWorks';
 import { BRAND, productTitle } from '@/brand/brand';
 import { useAuth } from '@/lib/auth';
 import { useI18n, type MessageKey } from '@/lib/i18n';
@@ -29,12 +31,13 @@ function useDocumentTitle() {
   }, [pathname, t]);
 }
 
-function UserMenu() {
+function UserMenu({ onHowItWorks }: { onHowItWorks: () => void }) {
   const { t } = useI18n();
   const { session, logout, isStaff } = useAuth();
+  const me = useMe(!!session && !isStaff);
   if (!session) return null;
-  const avatar = clsx('inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold',
-    isStaff ? 'bg-signal/15 text-signal-ink' : 'bg-accent/15 text-accent');
+  const who = isStaff ? t(`role.${session.role}`) : me.data?.merchantName ?? t(`role.${session.role}`);
+  const avatar = 'avatar h-7 w-7 text-[11px]';
   return (
     <Popover label={t('user.menu')} align="end" testId="user-menu"
       trigger={(open) => (
@@ -43,7 +46,7 @@ function UserMenu() {
           <span className={avatar}>{initials(session.username)}</span>
           <span className="hidden text-start leading-tight sm:block">
             <span className="block text-[12.5px] font-medium">{session.username}</span>
-            <span className="block text-[10.5px] text-faint">{t(`role.${session.role}`)}</span>
+            <span className="block text-[10.5px] text-faint">{who}</span>
           </span>
         </span>
       )}>
@@ -54,11 +57,14 @@ function UserMenu() {
             <div className="min-w-0">
               <p className="truncate text-[13px] font-medium">{session.username}</p>
               <p className="truncate text-[12px] text-muted">
-                {t(`role.${session.role}`)}{session.merchantId != null && ` · ${t('user.merchant', { id: session.merchantId })}`}
+                {isStaff ? t(`role.${session.role}`) : `${me.data?.merchantName ?? t('user.merchant', { id: session.merchantId ?? '' })} · ${t(`role.${session.role}`)}`}
               </p>
             </div>
           </div>
           <div className="pt-1.5">
+            <button type="button" role="menuitem" className={menuItem} data-testid="how-it-works-open" onClick={() => { close(); onHowItWorks(); }}>
+              <CircleHelp className="h-4 w-4 text-muted" aria-hidden />{t('help.howItWorks')}
+            </button>
             <button type="button" role="menuitem" className={menuItem} data-testid="logout" onClick={() => { close(); logout(); }}>
               <LogOut className="h-4 w-4 text-muted" aria-hidden />{t('actions.logout')}
             </button>
@@ -72,6 +78,7 @@ function UserMenu() {
 export function AppShell() {
   const { t, lang, setLang } = useI18n();
   const { theme, toggle } = useTheme();
+  const [howOpen, setHowOpen] = useState(false);
   useDocumentTitle();
 
   return (
@@ -80,7 +87,7 @@ export function AppShell() {
         {t('a11y.skip')}
       </a>
       <header className="sticky top-0 z-30 border-b border-line bg-bg/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-[1280px] items-center gap-2 px-4 sm:gap-3">
+        <div className="mx-auto flex h-14 max-w-[1280px] items-center gap-2 px-4 sm:gap-3 sm:px-6">
           <ProductSwitcher />
           <span className="hidden h-5 w-px bg-line lg:block" aria-hidden />
           <span className="hidden whitespace-nowrap text-[13px] text-muted lg:inline">{t('app.tagline')}</span>
@@ -92,28 +99,35 @@ export function AppShell() {
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </IconButton>
             <span className="mx-1 hidden h-5 w-px bg-line sm:block" aria-hidden />
-            <UserMenu />
+            <UserMenu onHowItWorks={() => setHowOpen(true)} />
           </div>
         </div>
-        <nav className="scrollbar-thin mx-auto flex max-w-[1280px] gap-1 overflow-x-auto px-3" aria-label={t('a11y.mainNav')}>
+        <nav className="scrollbar-thin mx-auto flex max-w-[1280px] gap-1 overflow-x-auto px-3 sm:px-5" aria-label={t('a11y.mainNav')}>
           {NAV.map(({ to, key, icon: Icon }) => (
             <NavLink key={to} to={to} end={to === '/'}
               className={({ isActive }) => clsx(
                 'focus-ring relative inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 pb-2.5 pt-1.5 text-[13px] font-medium transition-colors',
                 isActive ? 'text-accent after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-accent' : 'text-muted hover:text-fg',
               )}>
-              <Icon className="h-3.5 w-3.5" />{t(key)}
+              {({ isActive }) => (
+                <>
+                  <Icon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />{t(key)}
+                  {/* the destination dot from the logo marks where you are */}
+                  {isActive && <span className="h-1.5 w-1.5 rounded-full bg-signal" aria-hidden />}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
       </header>
-      <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 space-y-5 px-4 py-6">
+      <main id="main" className="mx-auto w-full max-w-[1280px] flex-1 space-y-6 px-4 py-6 sm:px-6">
         <Outlet />
       </main>
-      <footer className="mx-auto flex w-full max-w-[1280px] flex-wrap items-center justify-between gap-2 px-4 pb-6 pt-2 text-[12px] text-faint">
+      <footer className="mx-auto flex w-full max-w-[1280px] flex-wrap items-center justify-between gap-2 border-t border-line px-4 py-4 text-[12px] text-faint sm:px-6">
         <span>{productTitle()} · {t('footer.part', { brand: BRAND.suite })}</span>
         <span>© {new Date().getFullYear()} {BRAND.suite}</span>
       </footer>
+      <HowItWorks open={howOpen} onOpenChange={setHowOpen} />
     </div>
   );
 }
