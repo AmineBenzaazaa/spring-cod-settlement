@@ -1,5 +1,7 @@
 package com.msetransport.codsettlement.auth.web;
 
+import com.msetransport.codsettlement.account.domain.Merchant;
+import com.msetransport.codsettlement.account.repository.MerchantRepository;
 import com.msetransport.codsettlement.auth.service.AuthService;
 import com.msetransport.codsettlement.auth.web.dto.LoginRequest;
 import com.msetransport.codsettlement.auth.web.dto.MeResponse;
@@ -21,9 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final MerchantRepository merchants;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, MerchantRepository merchants) {
         this.authService = authService;
+        this.merchants = merchants;
     }
 
     @PostMapping("/login")
@@ -38,6 +42,8 @@ public class AuthController {
 
     @GetMapping("/me")
     public MeResponse me(@AuthenticationPrincipal AuthenticatedUser user) {
-        return MeResponse.of(user);
+        String merchantName = user.merchantId() == null ? null
+                : merchants.findById(user.merchantId()).map(Merchant::getName).orElse(null);
+        return MeResponse.of(user, merchantName);
     }
 }

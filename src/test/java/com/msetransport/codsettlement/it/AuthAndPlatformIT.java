@@ -30,6 +30,7 @@ class AuthAndPlatformIT extends AbstractIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + refreshed.get("accessToken").asText()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("atlas"))
+                .andExpect(jsonPath("$.merchantName").value("Atlas Home"))
                 .andExpect(jsonPath("$.role").value("MERCHANT"));
     }
 

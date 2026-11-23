@@ -22,11 +22,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import com.msetransport.codsettlement.account.repository.MerchantRepository;
 
 @WebMvcTest(AuthController.class)
 @Import(WebSliceTestConfig.class)
 @ActiveProfiles("test")
 class AuthControllerWebTest extends WebSliceTest {
+
+    @MockitoBean
+    MerchantRepository merchants;
 
     @MockitoBean
     AuthService authService;
