@@ -5,7 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import { formatDateTime, initials } from '@/lib/format';
 import { useCourierPage, useOverview } from '@/lib/queries';
 import { useDebounced } from '@/lib/useDebounced';
-import { OwedPill } from '@/components/CourierBalances';
+import { BalanceStatus } from '@/components/CourierBalances';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Money } from '@/components/ui/Money';
@@ -62,14 +62,14 @@ export function CouriersPage() {
                         <td className="td font-mono text-muted">{c.code}</td>
                         <td className="td font-mono text-[12px] text-muted">{c.contactPhone ?? '—'}</td>
                         <td className="td">
-                          <span className={`inline-flex items-center gap-1.5 text-[12px] ${c.active ? 'text-emerald-700 dark:text-emerald-300' : 'text-faint'}`}>
-                            <span className={`h-1.5 w-1.5 rounded-full ${c.active ? 'bg-emerald-500' : 'bg-zinc-400'}`} />
+                          <span className={`inline-flex items-center gap-1.5 text-[12px] ${c.active ? 'text-signal-ink-ink' : 'text-faint'}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${c.active ? 'bg-signal' : 'bg-faint'}`} />
                             {c.active ? t('couriers.active') : t('couriers.inactive')}
                           </span>
                         </td>
                         <td className="td num text-muted">{p?.deliveredOrders ?? '—'}</td>
                         <td className="td text-right">
-                          {p ? <div className="flex flex-col items-end gap-1"><Money value={p.balanceOwed} className="font-medium" /><OwedPill courier={p} /></div> : '—'}
+                          {p ? <div className="flex flex-col items-end gap-1"><Money value={p.balanceOwed} className="font-medium" /><BalanceStatus courier={p} /></div> : '—'}
                         </td>
                         <td className="td text-muted">{formatDateTime(c.createdAt, lang).split(',')[0]}</td>
                         <td className="td text-right">

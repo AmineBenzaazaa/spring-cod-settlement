@@ -96,7 +96,7 @@ export function DisputeDrawer({ disputeId, onClose }: { disputeId: number | null
                 </Button>
                 <Button size="sm" variant="ghost" loading={resolve.isPending && resolve.variables?.decision === 'REJECTED'}
                   disabled={resolve.isPending} onClick={() => decide('REJECTED')} data-testid="reject-dispute"
-                  className="text-rose-600 hover:bg-rose-500/10 hover:text-rose-600 dark:text-rose-400">
+                  className="text-danger hover:bg-danger/10 hover:text-danger">
                   <XIcon className="h-3.5 w-3.5" />{t('drawer.reject')}
                 </Button>
               </div>

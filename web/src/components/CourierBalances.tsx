@@ -4,23 +4,45 @@ import { Truck } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useI18n } from '@/lib/i18n';
 import { formatNumber, initials } from '@/lib/format';
-import { formatMoney, moneySign, absMoney, ratioPercent, toChartNumber } from '@/lib/money';
+import { formatMoney, formatPercent, moneySign, absMoney, ratioPercent, toChartNumber } from '@/lib/money';
 import type { CourierPosition } from '@/lib/types';
 import { EmptyState } from './ui/EmptyState';
 import { Money } from './ui/Money';
+import { Term } from './ui/Term';
 
-export function OwedPill({ courier }: { courier: CourierPosition }) {
+type Health = 'settled' | 'overpaid' | 'onTrack' | 'behind' | 'none';
+
+/** How a courier is doing: share of the expected cash it has reported. */
+export function courierHealth(c: CourierPosition): { health: Health; pct: string | null } {
+  const pct = ratioPercent(c.reportedCollections, c.expectedCollections);
+  const sign = moneySign(c.balanceOwed);
+  if (sign === 0) return { health: 'settled', pct };
+  if (sign < 0) return { health: 'overpaid', pct };
+  const n = Number(pct ?? 0);
+  return { health: n >= 80 ? 'onTrack' : n > 0 ? 'behind' : 'none', pct };
+}
+
+const CHIP: Record<Health, string> = {
+  settled: 'bg-signal/10 text-signal-ink ring-signal/25',
+  onTrack: 'bg-signal/10 text-signal-ink ring-signal/25',
+  overpaid: 'bg-warn/10 text-warn ring-warn/25',
+  behind: 'bg-warn/10 text-warn ring-warn/25',
+  none: 'bg-danger/10 text-danger ring-danger/25',
+};
+const BAR: Record<Health, string> = { settled: 'bg-signal', onTrack: 'bg-signal', overpaid: 'bg-signal', behind: 'bg-warn', none: 'bg-danger' };
+const OWED: Record<Health, string> = { settled: 'text-faint', onTrack: 'text-fg', overpaid: 'text-warn', behind: 'text-warn', none: 'text-danger' };
+
+/** One small status chip; the amount itself is shown once, in the "Still owed" column. */
+export function BalanceStatus({ courier }: { courier: CourierPosition }) {
   const { t, lang } = useI18n();
-  const sign = moneySign(courier.balanceOwed);
-  if (sign === 0) {
-    return <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-500/25 dark:text-emerald-300">{t('balances.settled')}</span>;
-  }
+  const { health } = courierHealth(courier);
+  const label = health === 'overpaid'
+    ? t('balances.overpaid', { amount: formatMoney(absMoney(courier.balanceOwed), lang) })
+    : t(`balances.status.${health}`);
   return (
-    <span data-testid="owed-pill" className={clsx('inline-block whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset',
-      sign > 0 ? 'bg-rose-500/10 text-rose-700 ring-rose-500/25 dark:text-rose-300' : 'bg-amber-500/10 text-amber-700 ring-amber-500/25 dark:text-amber-300')}>
-      {sign > 0
-        ? t('balances.owes', { name: courier.name, amount: formatMoney(courier.balanceOwed, lang) })
-        : t('balances.overpaid', { amount: formatMoney(absMoney(courier.balanceOwed), lang) })}
+    <span data-testid="balance-status" data-health={health}
+      className={clsx('inline-block whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset', CHIP[health])}>
+      {label}
     </span>
   );
 }
@@ -35,28 +57,29 @@ export function CourierBalanceTable({ couriers }: { couriers: CourierPosition[] 
           <tr>
             <th className="th">{t('balances.courier')}</th>
             <th className="th text-right">{t('balances.delivered')}</th>
-            <th className="th text-right">{t('balances.expected')}</th>
-            <th className="th text-right">{t('balances.reported')}</th>
-            <th className="th text-right">{t('balances.fees')}</th>
-            <th className="th text-right">{t('balances.net')}</th>
-            <th className="th pr-4 text-right">{t('balances.owed')}</th>
+            <th className="th text-right"><Term k="expected">{t('balances.expected')}</Term></th>
+            <th className="th text-right"><Term k="reported">{t('balances.reported')}</Term></th>
+            <th className="th text-right"><Term k="fees">{t('balances.fees')}</Term></th>
+            <th className="th text-right"><Term k="netRemitted">{t('balances.net')}</Term></th>
+            <th className="th pr-4 text-right"><Term k="balanceOwed">{t('balances.owed')}</Term></th>
           </tr>
         </thead>
         <tbody>
           {couriers.map((c) => {
-            const pct = ratioPercent(c.reportedCollections, c.expectedCollections);
+            const { health, pct } = courierHealth(c);
             return (
               <tr key={c.courierId} className="border-t border-line align-top hover:bg-subtle/50" data-testid="balance-row" data-code={c.code}>
                 <td className="td">
                   <div className="flex items-center gap-2.5">
-                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-[10px] font-semibold text-accent">{initials(c.name)}</span>
+                    <span className="avatar h-8 w-8 text-[11px]">{initials(c.name)}</span>
                     <div className="min-w-0">
                       <Link to={`/orders?courierId=${c.courierId}`} className="focus-ring rounded font-medium hover:underline">{c.name}</Link>
                       <div className="mt-1 flex items-center gap-2">
-                        <div className="h-1 w-24 overflow-hidden rounded-full bg-subtle" title={pct ? `${pct} %` : undefined}>
-                          <div className="h-full rounded-full bg-accent" style={{ width: `${Math.min(100, Number(pct ?? 0))}%` }} />
+                        <div className={clsx('h-1.5 w-24 overflow-hidden rounded-full', health === 'none' ? 'bg-danger/20' : 'bg-subtle')}
+                          role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Number(pct ?? 0)} aria-label={t('balances.reportedShare')}>
+                          <div className={clsx('h-full rounded-full', BAR[health])} style={{ width: `${Math.min(100, Number(pct ?? 0))}%` }} />
                         </div>
-                        <span className="font-mono text-[11px] text-faint">{pct ? `${pct}%` : '—'}</span>
+                        <span className="text-[11px] tabular-nums text-faint">{formatPercent(pct, lang)}</span>
                       </div>
                     </div>
                   </div>
@@ -67,9 +90,9 @@ export function CourierBalanceTable({ couriers }: { couriers: CourierPosition[] 
                 <td className="td num"><Money value={c.fees} unit={false} muted /></td>
                 <td className="td num"><Money value={c.netRemitted} unit={false} /></td>
                 <td className="td whitespace-normal pr-4 text-right">
-                  <div className="ml-auto flex max-w-[290px] flex-col items-end gap-1">
-                    <Money value={c.balanceOwed} className="font-semibold" />
-                    <OwedPill courier={c} />
+                  <div className="ms-auto flex flex-col items-end gap-1">
+                    <Money value={c.balanceOwed} className={clsx('font-semibold', OWED[health])} />
+                    <BalanceStatus courier={c} />
                   </div>
                 </td>
               </tr>
@@ -96,8 +119,8 @@ function ChartTooltip({ active, payload }: { active?: boolean; payload?: Array<{
   return (
     <div className="rounded-lg border border-line bg-panel px-3 py-2 text-[12px] shadow-lift">
       <p className="mb-1 font-medium">{row.name}</p>
-      <p className="flex justify-between gap-4 text-muted"><span>{t('balances.expected')}</span><span className="font-mono text-fg">{row.expectedLabel}</span></p>
-      <p className="flex justify-between gap-4 text-muted"><span>{t('balances.reported')}</span><span className="font-mono text-fg">{row.reportedLabel}</span></p>
+      <p className="flex justify-between gap-4 text-muted"><span>{t('balances.expected')}</span><span className="tabular-nums text-fg">{row.expectedLabel}</span></p>
+      <p className="flex justify-between gap-4 text-muted"><span>{t('balances.reported')}</span><span className="tabular-nums text-fg">{row.reportedLabel}</span></p>
     </div>
   );
 }
@@ -121,8 +144,8 @@ export function BalanceChart({ couriers }: { couriers: CourierPosition[] }) {
           <YAxis tickLine={false} axisLine={false} width={44} tick={{ fill: 'currentColor', fontSize: 11 }}
             tickFormatter={(v: number) => new Intl.NumberFormat(lang === 'fr' ? 'fr-MA' : 'en-GB', { notation: 'compact' }).format(v)} />
           <Tooltip content={<ChartTooltip />} cursor={{ fill: 'currentColor', fillOpacity: 0.06 }} />
-          <Bar dataKey="expected" name={t('balances.expected')} radius={[4, 4, 0, 0]} maxBarSize={34} className="text-chart-2" fill="currentColor" />
-          <Bar dataKey="reported" name={t('balances.reported')} radius={[4, 4, 0, 0]} maxBarSize={34} className="text-accent" fill="currentColor" />
+          <Bar dataKey="expected" name={t('balances.expected')} radius={[6, 6, 0, 0]} maxBarSize={36} className="text-accent/25" fill="currentColor" />
+          <Bar dataKey="reported" name={t('balances.reported')} radius={[6, 6, 0, 0]} maxBarSize={36} className="text-signal" fill="currentColor" />
         </BarChart>
       </ResponsiveContainer>
     </div>

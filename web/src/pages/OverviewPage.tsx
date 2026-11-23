@@ -51,8 +51,8 @@ export function OverviewPage() {
               <div className="mb-2 flex items-center justify-between">
                 <h2 id="chart-title" className="text-[14px] font-semibold">{t('balances.chart')}</h2>
                 <div className="flex items-center gap-3 text-[11px] text-muted">
-                  <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-chart-2" />{t('balances.expected')}</span>
-                  <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-sm bg-accent" />{t('balances.reported')}</span>
+                  <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-accent/25" />{t('balances.expected')}</span>
+                  <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-signal" />{t('balances.reported')}</span>
                 </div>
               </div>
               <BalanceChart couriers={overview.data.couriers} />

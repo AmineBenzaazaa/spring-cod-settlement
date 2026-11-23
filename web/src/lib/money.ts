@@ -111,3 +111,9 @@ export function ratioPercent(part: Money, whole: Money): string | null {
   const abs = tenths < 0n ? -tenths : tenths;
   return `${sign}${abs / 10n}.${abs % 10n}`;
 }
+
+/** "45.6%" in English, "45,6 %" in French (typographic rule), "—" when unknown. */
+export function formatPercent(pct: string | null | undefined, lang: 'en' | 'fr'): string {
+  if (pct == null) return '—';
+  return lang === 'fr' ? `${pct.replace('.', ',')}\u00a0%` : `${pct}%`;
+}

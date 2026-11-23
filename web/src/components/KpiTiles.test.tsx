@@ -7,9 +7,9 @@ describe('KpiTilesView', () => {
   it('renders the five KPIs from money strings', () => {
     render(<I18nProvider initial="en"><KpiTilesView overview={overview} /></I18nProvider>);
     expect(within(screen.getByTestId('kpi-expected')).getByText('4,588.00')).toBeInTheDocument();
-    expect(within(screen.getByTestId('kpi-expected')).getByText('8 delivered parcels')).toBeInTheDocument();
+    expect(within(screen.getByTestId('kpi-expected')).getByText('Cash due on 8 delivered parcels')).toBeInTheDocument();
     expect(within(screen.getByTestId('kpi-reported')).getByText('4,057.50')).toBeInTheDocument();
-    expect(within(screen.getByTestId('kpi-reported')).getByText(/88\.4 % of expected/)).toBeInTheDocument();
+    expect(within(screen.getByTestId('kpi-reported')).getByText(/reported 88\.4% of the cash expected/)).toBeInTheDocument();
     expect(within(screen.getByTestId('kpi-net')).getByText('3,832.50')).toBeInTheDocument();
     expect(within(screen.getByTestId('kpi-disputes')).getByText('1')).toBeInTheDocument();
     expect(within(screen.getByTestId('kpi-disputes')).getByText('50.00 MAD claimed')).toBeInTheDocument();
@@ -19,7 +19,7 @@ describe('KpiTilesView', () => {
   it('shows a dash instead of a percentage before anything is delivered', () => {
     const empty = { ...overview, expectedCollections: '0.00', reportedCollections: '0.00', couriers: [] };
     render(<I18nProvider initial="en"><KpiTilesView overview={empty} /></I18nProvider>);
-    expect(within(screen.getByTestId('kpi-reported')).getByText(/— of expected/)).toBeInTheDocument();
+    expect(within(screen.getByTestId('kpi-reported')).getByText(/reported — of the cash expected/)).toBeInTheDocument();
   });
 
   it('speaks French', () => {

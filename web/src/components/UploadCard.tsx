@@ -87,11 +87,11 @@ export function UploadCard({ onUploaded }: { onUploaded?: (res: StatementUploadR
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <label htmlFor="periodStart" className="text-[12.5px] font-medium">{t('upload.periodStart')}</label>
-            <input id="periodStart" type="date" className="input font-mono text-[13px]" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} />
+            <input id="periodStart" type="date" className="input tabular-nums text-[13px]" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} />
           </div>
           <div className="space-y-1.5">
             <label htmlFor="periodEnd" className="text-[12.5px] font-medium">{t('upload.periodEnd')}</label>
-            <input id="periodEnd" type="date" className="input font-mono text-[13px]" value={periodEnd} onChange={(e) => setPeriodEnd(e.target.value)} />
+            <input id="periodEnd" type="date" className="input tabular-nums text-[13px]" value={periodEnd} onChange={(e) => setPeriodEnd(e.target.value)} />
           </div>
         </div>
 
@@ -114,7 +114,7 @@ export function UploadCard({ onUploaded }: { onUploaded?: (res: StatementUploadR
             onChange={(e) => pick(e.target.files?.[0])} />
           {file ? (
             <div className="flex items-center gap-2.5 text-left">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300"><FileSpreadsheet className="h-4 w-4" /></span>
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-signal/10 text-signal-ink-ink"><FileSpreadsheet className="h-4 w-4" /></span>
               <div className="min-w-0">
                 <p className="truncate font-mono text-[13px] font-medium" data-testid="picked-file">{file.name}</p>
                 <p className="text-[12px] text-faint">{humanSize(file.size)}</p>
@@ -133,21 +133,21 @@ export function UploadCard({ onUploaded }: { onUploaded?: (res: StatementUploadR
           )}
         </div>
 
-        {localError && <p role="alert" className="text-[12.5px] text-rose-600 dark:text-rose-400">{localError}</p>}
+        {localError && <p role="alert" className="text-[12.5px] text-danger">{localError}</p>}
         {upload.isError && <ProblemAlert error={upload.error} />}
 
         {result?.duplicate && (
-          <div role="status" data-testid="duplicate-notice" className="rounded-lg border border-amber-500/30 bg-amber-500/[0.07] px-3.5 py-3 text-[13px]">
-            <p className="flex items-center gap-2 font-medium text-amber-800 dark:text-amber-200"><Copy className="h-4 w-4" />{t('upload.duplicateTitle')}</p>
-            <p className="mt-1 text-amber-800/90 dark:text-amber-200/90">{t('upload.duplicate', { id: result.statement.id })}</p>
-            <p className="mt-1 truncate font-mono text-[11px] text-amber-700/80 dark:text-amber-300/70" title={result.statement.fileSha256}>sha256 {result.statement.fileSha256}</p>
-            <Link to={`/statements/${result.statement.id}`} className="mt-2 inline-block text-[12.5px] font-medium text-amber-800 underline underline-offset-2 dark:text-amber-200" data-testid="open-existing">
+          <div role="status" data-testid="duplicate-notice" className="rounded-lg border border-warn/30 bg-warn/[0.07] px-3.5 py-3 text-[13px]">
+            <p className="flex items-center gap-2 font-medium text-warn"><Copy className="h-4 w-4" />{t('upload.duplicateTitle')}</p>
+            <p className="mt-1 text-warn/90">{t('upload.duplicate', { id: result.statement.id })}</p>
+            <p className="mt-1 truncate font-mono text-[11px] text-warn/80" title={result.statement.fileSha256}>sha256 {result.statement.fileSha256}</p>
+            <Link to={`/statements/${result.statement.id}`} className="mt-2 inline-block text-[12.5px] font-medium text-warn underline underline-offset-2" data-testid="open-existing">
               {t('upload.openExisting', { id: result.statement.id })}
             </Link>
           </div>
         )}
         {result && !result.duplicate && (
-          <div role="status" data-testid="upload-accepted" className="flex items-center justify-between gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.07] px-3.5 py-2.5 text-[13px] text-emerald-800 dark:text-emerald-200">
+          <div role="status" data-testid="upload-accepted" className="flex items-center justify-between gap-2 rounded-lg border border-signal/30 bg-signal/[0.07] px-3.5 py-2.5 text-[13px] text-signal-ink-ink">
             <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4" />{t('upload.accepted', { id: result.statement.id })}</span>
             <Link to={`/statements/${result.statement.id}`} className="shrink-0 font-medium underline underline-offset-2" data-testid="open-uploaded">#{result.statement.id}</Link>
           </div>

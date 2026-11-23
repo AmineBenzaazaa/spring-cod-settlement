@@ -14,16 +14,16 @@ export function Money({ value, diff, muted, className, unit = true }: {
   return (
     <span
       className={clsx(
-        'font-mono tabular-nums',
-        diff && sign < 0 && 'text-rose-600 dark:text-rose-400',
-        diff && sign > 0 && 'text-amber-600 dark:text-amber-400',
+        'tabular-nums',
+        diff && sign < 0 && 'text-danger',
+        diff && sign > 0 && 'text-warn',
         diff && sign === 0 && 'text-faint',
         muted && 'text-muted',
         className,
       )}
     >
       {formatMoney(value, lang, { currency: false, signed: diff })}
-      {unit && value != null && <span className="ml-1 font-sans text-[0.78em] font-medium text-faint">MAD</span>}
+      {unit && value != null && <span className="ms-1 text-[0.78em] font-medium text-faint">MAD</span>}
     </span>
   );
 }

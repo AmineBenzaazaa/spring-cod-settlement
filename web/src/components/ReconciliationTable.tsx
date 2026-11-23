@@ -100,7 +100,7 @@ export function ReconciliationTable({ results, summary, onOpenDispute }: {
                   <td className="td num font-medium"><Money value={r.difference} diff unit={false} /></td>
                   <td className="td text-right">
                     {r.outcome === 'MATCHED' ? null : r.hasDispute ? (
-                      <span className="inline-flex items-center gap-1 text-[12px] font-medium text-amber-700 dark:text-amber-300" data-testid="disputed">
+                      <span className="inline-flex items-center gap-1 text-[12px] font-medium text-warn" data-testid="disputed">
                         <Gavel className="h-3.5 w-3.5" />{t('recon.disputed')}
                       </span>
                     ) : (

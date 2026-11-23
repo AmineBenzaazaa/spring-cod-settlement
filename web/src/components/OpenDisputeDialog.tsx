@@ -57,16 +57,16 @@ export function OpenDisputeDialog({ result, onClose, onOpened }: {
             <div className="space-y-1.5">
               <label htmlFor="reason" className="text-[12.5px] font-medium">{t('dispute.reason')}</label>
               <textarea id="reason" rows={3} className="input h-auto py-2 leading-snug" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={2000} />
-              {errors.reason && <p role="alert" className="text-[12px] text-rose-600 dark:text-rose-400">{errors.reason}</p>}
+              {errors.reason && <p role="alert" className="text-[12px] text-danger">{errors.reason}</p>}
             </div>
             <div className="space-y-1.5">
               <label htmlFor="claimed" className="text-[12.5px] font-medium">{t('dispute.claimed')}</label>
               <div className="relative">
-                <input id="claimed" inputMode="decimal" className="input pr-14 font-mono tabular-nums" value={claimed} onChange={(e) => setClaimed(e.target.value)} />
+                <input id="claimed" inputMode="decimal" className="input pr-14 tabular-nums" value={claimed} onChange={(e) => setClaimed(e.target.value)} />
                 <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[12px] font-medium text-faint">MAD</span>
               </div>
               {errors.claimed
-                ? <p role="alert" className="text-[12px] text-rose-600 dark:text-rose-400">{errors.claimed}</p>
+                ? <p role="alert" className="text-[12px] text-danger">{errors.claimed}</p>
                 : <p className="text-[12px] text-faint">{t('dispute.claimedHint', { amount: formatMoney(absMoney(result.difference), lang) })}</p>}
             </div>
             {mutation.isError && <ProblemAlert error={mutation.error} />}

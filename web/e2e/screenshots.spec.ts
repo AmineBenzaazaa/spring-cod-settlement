@@ -29,6 +29,13 @@ test('README screenshots', async ({ page }) => {
   await page.waitForTimeout(800);
   await page.screenshot({ path: out('overview') });
 
+  await page.getByTestId('user-menu').click();
+  await page.getByTestId('how-it-works-open').click();
+  await expect(page.getByTestId('how-it-works')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: out('how-it-works') });
+  await page.keyboard.press('Escape');
+
   await page.getByRole('link', { name: 'Statements' }).click();
   await page.getByLabel('Courier').selectOption({ label: 'Speedex Colis · speedex' });
   await page.getByLabel('Period start').fill('2026-10-01');

@@ -12,19 +12,19 @@ export function ProblemAlert({ error, className }: { error: unknown; className?:
   const problem = error instanceof ApiError ? error : null;
   const fields = problem ? Object.entries(problem.fieldErrors) : [];
   return (
-    <div role="alert" data-testid="problem" className={`rounded-lg border border-rose-500/25 bg-rose-500/[0.06] px-3.5 py-3 text-[13px] ${className ?? ''}`}>
+    <div role="alert" data-testid="problem" className={`rounded-lg border border-danger/25 bg-danger/[0.06] px-3.5 py-3 text-[13px] ${className ?? ''}`}>
       <div className="flex items-start gap-2.5">
-        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
+        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
         <div className="min-w-0 space-y-1">
-          <p className="font-medium text-rose-800 dark:text-rose-200">
+          <p className="font-medium text-danger">
             {problem?.title ?? t('error.title')}
-            {problem && <span className="ml-2 rounded bg-rose-500/10 px-1.5 py-px font-mono text-[11px] font-normal">{problem.status}</span>}
+            {problem && <span className="ml-2 rounded bg-danger/10 px-1.5 py-px font-mono text-[11px] font-normal">{problem.status}</span>}
           </p>
-          <p className="text-rose-700/90 dark:text-rose-300/90">
+          <p className="text-danger/90">
             {problem ? problem.detail ?? problem.message : error instanceof TypeError ? t('error.network') : String((error as Error)?.message ?? error)}
           </p>
           {fields.length > 0 && (
-            <ul className="mt-1.5 space-y-0.5 text-[12.5px] text-rose-700/90 dark:text-rose-300/90">
+            <ul className="mt-1.5 space-y-0.5 text-[12.5px] text-danger/90">
               {fields.flatMap(([field, msgs]) => msgs.map((m, i) => (
                 <li key={`${field}-${i}`}><span className="font-mono text-[11.5px]">{field}</span>: {m}</li>
               )))}

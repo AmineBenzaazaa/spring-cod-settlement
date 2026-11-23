@@ -25,7 +25,7 @@ export function StatementsTable({ page, onPage, highlight }: { page: number; onP
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
         <h2 id="history-title" className="text-[14px] font-semibold">{t('history.title')}</h2>
         {polling && (
-          <span className="inline-flex items-center gap-1.5 text-[12px] text-sky-600 dark:text-sky-300" data-testid="polling">
+          <span className="inline-flex items-center gap-1.5 text-[12px] text-accent" data-testid="polling">
             <RefreshCw className="h-3 w-3 animate-spin" />{t('history.polling')}
           </span>
         )}

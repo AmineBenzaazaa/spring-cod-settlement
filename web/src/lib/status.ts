@@ -5,12 +5,14 @@ export interface Tone {
   ring: string;
 }
 
-const zinc: Tone = { dot: 'bg-zinc-400', text: 'text-zinc-600 dark:text-zinc-300', bg: 'bg-zinc-500/10', ring: 'ring-zinc-500/20' };
-const sky: Tone = { dot: 'bg-sky-500', text: 'text-sky-700 dark:text-sky-300', bg: 'bg-sky-500/10', ring: 'ring-sky-500/25' };
-const amber: Tone = { dot: 'bg-amber-500', text: 'text-amber-700 dark:text-amber-300', bg: 'bg-amber-500/10', ring: 'ring-amber-500/25' };
-const emerald: Tone = { dot: 'bg-emerald-500', text: 'text-emerald-700 dark:text-emerald-300', bg: 'bg-emerald-500/10', ring: 'ring-emerald-500/25' };
-const rose: Tone = { dot: 'bg-rose-500', text: 'text-rose-700 dark:text-rose-300', bg: 'bg-rose-500/10', ring: 'ring-rose-500/25' };
-const violet: Tone = { dot: 'bg-violet-500', text: 'text-violet-700 dark:text-violet-300', bg: 'bg-violet-500/10', ring: 'ring-violet-500/25' };
+// Brand semantic tones (tokens from brand/tokens.css): green signal = paid / matched / done,
+// warn = needs a look, danger = money missing, info = in progress or unknown, neutral = waiting.
+const neutral: Tone = { dot: 'bg-faint', text: 'text-muted', bg: 'bg-subtle', ring: 'ring-line' };
+const info: Tone = { dot: 'bg-info', text: 'text-info', bg: 'bg-info/10', ring: 'ring-info/25' };
+const warn: Tone = { dot: 'bg-warn', text: 'text-warn', bg: 'bg-warn/10', ring: 'ring-warn/25' };
+const signal: Tone = { dot: 'bg-signal', text: 'text-signal-ink', bg: 'bg-signal/10', ring: 'ring-signal/25' };
+const danger: Tone = { dot: 'bg-danger', text: 'text-danger', bg: 'bg-danger/10', ring: 'ring-danger/25' };
+const zinc = neutral, sky = info, amber = warn, emerald = signal, rose = danger, violet = info;
 
 /** One palette for every enum the UI shows, so a colour always means the same thing. */
 const tones: Record<string, Tone> = {
@@ -31,8 +33,8 @@ export function tone(value: string): Tone {
 
 /** Row tint for reconciliation lines (left border + soft background). */
 export const outcomeRow: Record<string, string> = {
-  MATCHED: 'border-l-emerald-500/70',
-  AMOUNT_MISMATCH: 'border-l-amber-500 bg-amber-500/[0.04]',
-  UNKNOWN_TRACKING: 'border-l-violet-500 bg-violet-500/[0.04]',
-  MISSING_FROM_STATEMENT: 'border-l-rose-500 bg-rose-500/[0.04]',
+  MATCHED: 'border-l-signal/70',
+  AMOUNT_MISMATCH: 'border-l-warn bg-warn/[0.04]',
+  UNKNOWN_TRACKING: 'border-l-info bg-info/[0.04]',
+  MISSING_FROM_STATEMENT: 'border-l-danger bg-danger/[0.04]',
 };

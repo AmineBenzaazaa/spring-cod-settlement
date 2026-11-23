@@ -11,11 +11,11 @@ describe('ReconciliationTable', () => {
     const rows = screen.getAllByTestId('recon-row');
     expect(rows.map((r) => r.dataset.outcome)).toEqual(['MATCHED', 'MATCHED', 'AMOUNT_MISMATCH', 'UNKNOWN_TRACKING', 'MISSING_FROM_STATEMENT']);
     const mismatch = rows[2]!;
-    expect(mismatch.className).toContain('border-l-amber-500');
+    expect(mismatch.className).toContain('border-l-warn');
     expect(within(mismatch).getByText('Amount mismatch')).toBeInTheDocument();
     expect(within(mismatch).getByText('445.50')).toBeInTheDocument();
-    expect(within(mismatch).getByText('−50.00')).toHaveClass('text-rose-600');
-    expect(within(rows[3]!).getByText('+199.00')).toHaveClass('text-amber-600');
+    expect(within(mismatch).getByText('−50.00')).toHaveClass('text-danger');
+    expect(within(rows[3]!).getByText('+199.00')).toHaveClass('text-warn');
   });
 
   it('offers "Open dispute" only on non-matched lines without a dispute', async () => {
