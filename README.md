@@ -26,6 +26,38 @@ Playwright · JaCoCo · Docker · GitHub Actions.
 
 ---
 
+## What is MSE Transport?
+
+MSE Transport is software for **cash-on-delivery (COD) e-commerce in Morocco**: the customer pays the
+courier in cash at the door, and the courier pays the merchant back later. Three products cover the
+whole journey of a parcel and its cash:
+
+```mermaid
+flowchart LR
+    A["Order created<br/><b>MSE Dispatch</b>"] --> B["Courier delivers<br/>and collects cash"]
+    B --> C["Courier sends a<br/>remittance statement (CSV)"]
+    C --> D["Reconciled line by line<br/><b>MSE Settle</b>"]
+    D --> E["Mismatches become<br/>disputes"]
+    D --> F["Questions answered<br/><b>MSE Copilot</b>"]
+    E --> F
+```
+
+- **MSE Dispatch** runs the deliveries: orders, courier assignment, attempts, customer SMS.
+- **MSE Settle** checks the courier's cash: every remittance line against the merchant's orders.
+- **MSE Copilot** answers questions about it in plain English or French, with checked figures.
+
+### Take the 2-minute tour
+
+1. `docker compose up --build -d`, then open http://localhost:3200.
+2. Sign in as the merchant **Atlas Home** (`atlas`, already filled in): click **Sign in**.
+3. **Overview**: hover the ⓘ next to "COD expected" and "Net remitted" to see what they mean.
+4. **Statements**: pick *Speedex Colis*, period 2026-10-01 → 2026-10-31, drop `fixtures/sample_remittance.csv`.
+5. Click the new statement: 11 lines match, 3 don't. Click **Open dispute** on the short payment.
+6. Open the account menu → **Sign out**, sign in as **Finance ops** (`ops`), open **Disputes** and resolve it.
+7. Account menu → **How it works** shows how Settle fits with Dispatch and Copilot.
+
+The same tour with screenshots: [`docs/TOUR.md`](docs/TOUR.md).
+
 ## The problem
 
 In Moroccan e-commerce most orders are paid **in cash, at the door**. The courier company collects
