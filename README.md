@@ -271,7 +271,7 @@ open target/site/jacoco/index.html
 | Controllers + security | `@WebMvcTest` + real `SecurityFilterChain` + real JWTs | 36 |
 | Repositories | `@DataJpaTest` on Testcontainers PostgreSQL | 9 |
 | End to end | `@SpringBootTest` + MockMvc + Testcontainers + Awaitility | 20 |
-| Web app | Vitest + Testing Library (`cd web && npm test`) | 42 |
+| Web app | Vitest + Testing Library (`cd web && npm test`) | 44 |
 | Browser e2e | Playwright through nginx (`cd web && npm run e2e`) | 1 |
 
 Unit and slice tests run with Surefire (`*Test`), Testcontainers tests with Failsafe (`*IT`);

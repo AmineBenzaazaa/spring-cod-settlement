@@ -58,7 +58,7 @@ each courier still owes.
 |---|---|
 | Backend unit and slice tests (JUnit 5, Mockito, `@WebMvcTest`) | 176 |
 | Backend integration tests (Testcontainers PostgreSQL) | 29 |
-| Web app tests (Vitest + Testing Library) | 42 |
+| Web app tests (Vitest + Testing Library) | 44 |
 | Browser end-to-end (Playwright, upload to dispute resolution) | 1 |
 
 `mvn verify` enforces a JaCoCo line-coverage gate (currently 96.4 % of lines). All suites run in CI.
